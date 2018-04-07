@@ -1,0 +1,61 @@
+templates:
+  - ../otherTemplate.yml
+  - path: tem.yml
+    options:
+      name: Basic
+options:
+ - name: name
+   default: MyProject
+   required: false
+   global: true
+   question: What is the name of your project?
+   description: This will be used for the name and other things
+ - name: type
+   required: true
+   question: What type of application?
+   type: option
+   options:
+     - application: application
+     - library: framework
+ - name: includePod
+   required: true
+   type: bool
+   question: Do you want to include pods
+   branch:
+     true:
+       files:
+         template: podspec.swift
+  - name: includePackage
+    required: true
+    type: bool
+    question: Do you want to include package
+    branch:
+      true:
+        templates:
+          - path: package.yml
+            options:
+              name: {{ name }}
+  - name: tests
+    question: Do you want to create a test?
+    type: recursive
+    default: 1
+    branch:
+      true:
+        files:
+          - template: test.stencil
+            file: {{ name }}.swift
+  - name: types
+    type: list
+    default:
+      - cow
+      - dog
+    question: What sort of types
+files:
+  - template: file.stencil
+    file: {{ name }}.swift
+  - template: application.swift
+    include: name == application
+  - template: podspec.swift
+    include: includePod
+  - contents: "This is a file in {{ name }}"
+    file: simple.string

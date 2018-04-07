@@ -1,0 +1,65 @@
+
+options:
+  - name: project
+    description: The name of the project
+    question: What is the name of your project?
+    required: true
+    type: string
+  - name: targets
+    description: The list of targets
+    question: Do you wish to add a target?
+    type: array
+    repeatAnswer: "true"
+    set: array
+    options:
+      - name: name
+        question: What's the name of the target?
+        type: string
+        setOption: currentTarget.{{ target }}
+      - name: type
+        question: What sort of target?
+        type: choice
+        set: targets.{{ target }}
+        choices:
+          - application
+          - framework
+      - name: platform
+        question: What platform?
+        type: choice
+        set: targets.{{ target }}
+        choices:
+         - iOS
+         - macOS
+         - tvOS
+         - watchOS
+    branch:
+      true:
+        options:
+          - name: name
+            question: What's the name of the target?
+            setOption: currentTarget.{{ target }}
+          - name: type
+            question: What sort of target?
+            type: choice
+            set: targets.{{ target }}
+            choices:
+              - application
+              - framework
+          - name: platform
+            question: What platform?
+            type: choice
+            set: targets.{{ target }}
+            choices:
+             - iOS
+             - macOS
+             - tvOS
+             - watchOS
+        files:
+          - template: Target/ApplicationDelegate.swift
+            path: "{{ name }}/ApplicationDelegate.swift"
+            include: type == application
+files:
+  - template: project.yml
+  - template: Target/ApplicationDelegate.swift
+    path: "{{ name }}/ApplicationDelegate.swift"
+    context: targets

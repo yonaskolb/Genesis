@@ -1,0 +1,9 @@
+name: {{ project }}
+{% if targets %}
+targets:
+  {% for target in targets %}
+  {{ target.name }}:
+    type: {{ target.type }}
+    platform: {{ target.platform }}
+  {% endfor %}
+{% endif %}
