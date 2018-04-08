@@ -63,3 +63,8 @@ files:
   - template: Target/ApplicationDelegate.swift
     path: "{{ name }}/ApplicationDelegate.swift"
     context: targets
+    include: type == 'application'
+  - template: Target/Header.h
+    path: "{{ name }}/Header.h"
+    context: targets
+    include: type == 'framework'

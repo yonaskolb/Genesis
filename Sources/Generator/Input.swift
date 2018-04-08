@@ -20,7 +20,14 @@ extension Input {
         let errorResponse: InputReader<String>.ErrorResponse = { _ in
             printError("You must respond with one of the following:\n\(optionsString)")
         }
-        return readObject(prompt: prompt, secure: false, validation: validation, errorResponse: errorResponse)
+        let value = readObject(prompt: prompt, secure: false, validation: validation, errorResponse: errorResponse)
+        if options.contains(value) {
+            return value
+        } else if let index = Int(value) {
+            return options[index - 1]
+        } else {
+            return value
+        }
     }
     
 }

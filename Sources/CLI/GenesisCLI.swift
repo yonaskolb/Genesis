@@ -20,7 +20,7 @@ public class GenesisCLI {
         cli = CLI(name: "genesis", version: version, description: "genesis templater", commands: [
             generateCommand
         ])
-        cli.router = SingleCommandRouter(command: generateCommand)
+//        cli.router = SingleCommandRouter(command: generateCommand)
     }
 
     public func run(arguments: String? = nil) -> Int32 {

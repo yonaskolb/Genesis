@@ -17,7 +17,7 @@ class GenerateCommand: Command {
 
     let destinationPath = Key<String>("-d", "--destination", description: "Path to the directory where output will be generated. Defaults to the current directory")
 
-    let optionsArgument = Key<String>("-o", "--options", "Provide option overrides, in the format --options \"option1: value 2, option2: value 2.\nOptions are comma delimited, and key value is colon delimited. Any white space is trimmed")
+    let optionsArgument = Key<String>("-o", "--options", description: "Provide option overrides, in the format --options \"option1: value 2, option2: value 2.")
 
     let nonInteractive = Flag("-n", "--non-interactive", description: "Do not prompt for required options")
 
@@ -31,10 +31,10 @@ class GenerateCommand: Command {
         let templatePath = Path(self.templatePath.value).absolute()
         let destinationPath = self.destinationPath.value.flatMap { Path($0) }?.absolute() ?? Path()
 
-        var options: [String: Any] = [:]
+        var context: Context = [:]
 
         // extract options from env
-        options = ProcessInfo.processInfo.environment
+        context = ProcessInfo.processInfo.environment
 
         // extract options from option path
         if let optionPath = self.optionPath.value {
@@ -50,7 +50,7 @@ class GenerateCommand: Command {
             }
 
             for (key, value) in dictionary {
-                options[key] = value
+                context[key] = value
             }
         }
 
@@ -72,14 +72,14 @@ class GenerateCommand: Command {
                 .map { ($0[0], $0[1]) }
 
             for (key, value) in optionPairs {
-                options[key] = value
+                context[key] = value
             }
         }
 
         let template = try GenesisTemplate(path: templatePath)
         let generator = try TemplateGenerator(template: template, interactive: !nonInteractive.value)
 
-        let result = try generator.generate(path: destinationPath, options: options)
+        let result = try generator.generate(path: destinationPath, context: context)
         let filePaths = result.files.map { "  \($0.path.string)" }.joined(separator: "\n")
         for file in result.files {
             let path = destinationPath + file.path

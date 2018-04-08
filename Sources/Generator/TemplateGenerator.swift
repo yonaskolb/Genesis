@@ -25,8 +25,8 @@ public class TemplateGenerator {
         self.environment = Environment(loader: FileSystemLoader(paths: [template.path.parent()]), extensions: nil, templateClass: Template.self)
     }
 
-    public func generate(path: Path, options: [String: Any]) throws -> GenerationResult {
-        var context: [String: Any] = options
+    public func generate(path: Path, context: Context) throws -> GenerationResult {
+        var context: Context = context
         return try generateSection(template.section, path: path, context: &context)
     }
 
@@ -100,33 +100,42 @@ public class TemplateGenerator {
 
         var generatedFiles: [GeneratedFile] = []
 
+        func generateFile(_ file: File, path: Path, context: Context) throws  {
+
+            if let include = file.include {
+                let expression = "{% if \(include) %}true{% endif %}"
+                let parsedIf = try environment.renderTemplate(string: expression, context: context)
+                if parsedIf == "" {
+                    return
+                }
+            }
+            let fileContents: String
+            switch file.type {
+            case .contents(let string): fileContents = try environment.renderTemplate(string: string, context: context)
+            case .template(let path): fileContents = try environment.renderTemplate(name: path, context: context)
+            }
+            let replacedPath = try environment.renderTemplate(string: file.path, context: context)
+            let generatedFile = GeneratedFile(path: Path(replacedPath), contents: fileContents)
+            generatedFiles.append(generatedFile)
+        }
+
         for file in section.files {
             if let fileContextPath = file.context, let fileContext = context[fileContextPath] {
                 if let array = fileContext as? [Context] {
                     for element in array {
-                        generatedFiles.append(try generateFile(file, path: path, context: element))
+                        try generateFile(file, path: path, context: element)
                     }
                 } else if let context = fileContext as? Context {
-                    generatedFiles.append(try generateFile(file, path: path, context: context))
+                    try generateFile(file, path: path, context: context)
                 } else {
-                    generatedFiles.append(try generateFile(file, path: path, context: context))
+                    try generateFile(file, path: path, context: context)
                 }
             } else {
-                generatedFiles.append(try generateFile(file, path: path, context: context))
+                try generateFile(file, path: path, context: context)
             }
         }
 
         return GenerationResult(files: generatedFiles, context: context)
-    }
-
-    func generateFile(_ file: File, path: Path, context: Context) throws -> GeneratedFile {
-        let fileContents: String
-        switch file.type {
-        case .contents(let string): fileContents = try environment.renderTemplate(string: string, context: context)
-        case .template(let path): fileContents = try environment.renderTemplate(name: path, context: context)
-        }
-        let replacedPath = try environment.renderTemplate(string: file.path, context: context)
-        return GeneratedFile(path: Path(replacedPath), contents: fileContents)
     }
 }
 
