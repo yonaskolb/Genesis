@@ -7,16 +7,15 @@
 
 Genesis is a templating and scaffolding tool.
 
-A Genesis template is a manifest of options and files written in yaml or json. Option values can be provided in [various ways](#providing-options) otherwise you will be interactivly asked for inputs. Template files are written in [Stencil](https://github.com/kylef/Stencil)
+A Genesis template is a manifest of options and files written in yaml or json. Option values can be provided in [various ways](#providing-options) otherwise you will be interactivly asked for inputs. Template files are written in [Stencil](https://github.com/kylef/Stencil). The list of files can make use of dynamic paths and be generated multiple times depending on the format of the input.
 
-- ✅ Create **easy** to read and write templates manifest in easy to read and write yaml or json
-- ✅ Write template files in **Stencil**
-- ✅ **Interactively** generate templates
-- ✅ Powerful file **path generation**
-- ✅ Seperate **data** from templates in option files
-- ✅ Powerful option **configuration** with choices, lists and branching
+- ✅ Template manifests in easy to read and write **yaml or json**
+- ✅ Template files in **Stencil**
+- ✅ Provide **options** via ENV, command line, file or interactively
+- ✅ Powerful **interactivity** with choices, lists and branching
+- ✅ Write **dynamic** file paths
 
-The very simplest of templates could look like this
+The very simple example:
 
 ```yaml
 options:
@@ -47,12 +46,22 @@ Generated files:
   MyProject.project
 ```
 
+Much more powerful templates are possible. See more complete documentation [here](#templates)
+
 ## Installing
 Make sure Xcode 9 is installed first.
 
 #### [Mint](https://github.com/yonaskolb/mint)
 ```sh
 $ mint install yonaskolb/genesis
+```
+
+### Make
+
+```sh
+$ git clone https://github.com/yonaskolb/Genesis.git
+$ cd Genesis
+$ make
 ```
 
 ## Usage
