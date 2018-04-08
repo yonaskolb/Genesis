@@ -12,7 +12,7 @@ import Stencil
 import SwiftCLI
 import struct GenesisTemplate.Option
 
-typealias Context = [String: Any]
+public typealias Context = [String: Any]
 public class TemplateGenerator {
 
     let template: GenesisTemplate
@@ -30,16 +30,15 @@ public class TemplateGenerator {
         return try generateSection(template.section, path: path, context: &context)
     }
 
-    fileprivate func checkOption(_ option: Option, path: Path, context: inout Context) throws {
+    fileprivate func getOptionValue(_ option: Option, path: Path, context: inout Context) throws {
         if let value = context[option.name] {
             // found existing option
-            print("Found \(option.name) option: \(value)")
             return
         }
         
         if let value = option.value {
             // found default option
-            print("Using default value for \(option.name) option: \(value)")
+            context[option.name] = value
             return
         }
 
@@ -64,7 +63,7 @@ public class TemplateGenerator {
                 if Input.readBool(prompt: question) {
                     var childContext = Context()
                     for childOption in option.options {
-                        try checkOption(childOption, path: path, context: &childContext)
+                        try getOptionValue(childOption, path: path, context: &childContext)
                     }
                     array.append(childContext)
                     context[option.name] = array
@@ -94,7 +93,7 @@ public class TemplateGenerator {
 
     func generateSection(_ section: TemplateSection, path: Path, context: inout Context) throws -> GenerationResult {
         for option in section.options {
-            try checkOption(option, path: path, context: &context)
+            try getOptionValue(option, path: path, context: &context)
         }
 
         // print("Template Context: \(context)")
@@ -117,7 +116,7 @@ public class TemplateGenerator {
             }
         }
 
-        return generatedFiles
+        return GenerationResult(files: generatedFiles, context: context)
     }
 
     func generateFile(_ file: File, path: Path, context: Context) throws -> GeneratedFile {
@@ -137,9 +136,16 @@ public enum GeneratorError: Error {
     case missingOption(Option)
 }
 
-public typealias GenerationResult = [GeneratedFile]
+public struct GenerationResult {
+    public let files: [GeneratedFile]
+    public let context: Context
+}
 
-public struct GeneratedFile {
+public struct GeneratedFile: Equatable, CustomStringConvertible {
     public let path: Path
     public let contents: String
+
+    public var description: String {
+         return path.string
+    }
 }

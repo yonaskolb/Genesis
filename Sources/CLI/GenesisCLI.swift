@@ -12,9 +12,11 @@ public class GenesisCLI {
 
     public let version: String = "0.1.0"
     let cli: CLI
+    let stream: Streams
 
-    public init() {
-        let generateCommand = GenerateCommand()
+    public init(stream: Streams = .default) {
+        self.stream = stream
+        let generateCommand = GenerateCommand(stream: stream)
         cli = CLI(name: "genesis", version: version, description: "genesis templater", commands: [
             generateCommand
         ])
