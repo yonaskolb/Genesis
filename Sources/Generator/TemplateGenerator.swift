@@ -44,7 +44,6 @@ public class TemplateGenerator {
 
         if !interactive {
             if option.required {
-                print("Missing value for required \(option.name) option")
                 throw GeneratorError.missingOption(option)
             } else {
                 return
@@ -95,8 +94,6 @@ public class TemplateGenerator {
         for option in section.options {
             try getOptionValue(option, path: path, context: &context)
         }
-
-        // print("Template Context: \(context)")
 
         var generatedFiles: [GeneratedFile] = []
 
