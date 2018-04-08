@@ -1,6 +1,6 @@
 
 import SwiftCLI
-import TemplateGenerator
+import Generator
 import PathKit
 import GenesisTemplate
 import Foundation
@@ -71,7 +71,7 @@ class GenerateCommand: Command {
                 }
             }
 
-            let template = try Template(path: templatePath)
+            let template = try GenesisTemplate(path: templatePath)
             let generator = try TemplateGenerator(template: template, interactive: !nonInteractive.value)
             
             let results = try generator.generate(path: destinationPath, options: options)

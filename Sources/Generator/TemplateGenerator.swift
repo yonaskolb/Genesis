@@ -10,15 +10,16 @@ import PathKit
 import GenesisTemplate
 import Stencil
 import SwiftCLI
+import struct GenesisTemplate.Option
 
 typealias Context = [String: Any]
 public class TemplateGenerator {
 
-    let template: GenesisTemplate.Template
+    let template: GenesisTemplate
     let environment: Environment
     var interactive: Bool
 
-    public init(template: GenesisTemplate.Template, interactive: Bool) throws {
+    public init(template: GenesisTemplate, interactive: Bool) throws {
         self.template = template
         self.interactive = interactive
         self.environment = Environment(loader: FileSystemLoader(paths: [template.path.parent()]), extensions: nil, templateClass: Template.self)
@@ -29,7 +30,7 @@ public class TemplateGenerator {
         return try generateSection(template.section, path: path, context: &context)
     }
 
-    fileprivate func checkOption(_ option: GenesisTemplate.Option, path: Path, context: inout Context) throws {
+    fileprivate func checkOption(_ option: Option, path: Path, context: inout Context) throws {
         if let value = context[option.name] {
             // found existing option
             print("Found \(option.name) option: \(value)")
@@ -133,7 +134,7 @@ public class TemplateGenerator {
 public enum GeneratorError: Error {
     case templateSyntax(TemplateSyntaxError)
     case missingTemplate(TemplateDoesNotExist)
-    case missingOption(GenesisTemplate.Option)
+    case missingOption(Option)
 }
 
 public typealias GenerationResult = [GeneratedFile]

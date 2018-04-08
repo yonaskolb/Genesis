@@ -16,9 +16,9 @@ let package = Package(
         .package(url: "https://github.com/jakeheis/SwiftCLI", from: "4.2.0"),
     ],
     targets: [
-        .target(name: "Genesis", dependencies: ["GenesisCLI"]),
-        .target(name: "GenesisCLI", dependencies: ["TemplateGenerator", "GenesisTemplate", "SwiftCLI"]),
+        .target(name: "Genesis", dependencies: ["CLI"]),
+        .target(name: "CLI", dependencies: ["Generator", "GenesisTemplate", "SwiftCLI"]),
         .target(name: "GenesisTemplate", dependencies: ["Yams", "PathKit"]),
-        .target(name: "TemplateGenerator", dependencies: ["GenesisTemplate", "SwiftCLI", "Stencil", "PathKit", "Rainbow"]),
+        .target(name: "Generator", dependencies: ["GenesisTemplate", "SwiftCLI", "Stencil", "PathKit", "Rainbow"]),
     ]
 )

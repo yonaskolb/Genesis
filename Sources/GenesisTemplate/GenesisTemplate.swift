@@ -1,7 +1,7 @@
 import Yams
 import PathKit
 
-public struct Template {
+public struct GenesisTemplate {
     public var section: TemplateSection
     public var path: Path
 
