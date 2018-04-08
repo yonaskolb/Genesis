@@ -71,15 +71,43 @@ Options:
 ```
 
 ## Providing options
-Options will be passed to the template in this order which each level overriding the previous
+Options will be passed to the template in the following order, merging along the way, with duplicate options overriding the previous ones.
 
-- environment variables
-- `--option-file`
-- `--options`
-- interactive input
-- option defaults
+#### 1. Environment Variables
+Set any environment variables before you call generate, or use already existing ones from your development environment
 
-If an option is required and hasn't recieved a value from anywhere, generation will fail.
+```
+name="My Name" genesis generate template.yml
+```
+
+#### 2. Options File
+Pass a path to a json or yaml file with `--option-file`
+This can include more structures and complex data. For example:
+
+```yaml
+name: MyProject
+targets:
+  - name: MyTarget
+    type: application
+  - name: MyFramework
+    type: framework  
+```
+
+#### 3. Options Argument
+Pass specifc options with `--options` like this
+
+```
+-- options "option1: value 2, option2: value 2"
+```
+
+### 4. Interactive input
+Genesis will ask you for any missing options if they are required. You can turn off interactive input with `--non-interactive`.
+
+### 5. Default value
+Each option can have a default `value` which be used as a fallback. 
+
+### Missing value
+If an option is required and still hasn't recieved a value from anywhere, generation will fail.
 
 ## Template
 A genesic template is a yaml or json file that includes a list of `options` and `files`
@@ -109,7 +137,7 @@ Options are structured input for the `Stencil` templates. They serve as document
 Each file can have a `contents` or `template`. If neither of those are present, the file will be copied exactly as is without any content replacement.
 The final path of the file will be based off `path` otherwise `template`.
 
-### Stencil Templates
+## Stencil Templates
 Each Stencil template will have access to all the options. If the template is with an array it will get access to only that item within the array. See [Stencil](https://github.com/kylef/Stencil) for more info about tags
 
 ```
