@@ -50,7 +50,7 @@ Generated files:
 ## Installing
 Make sure Xcode 9 is installed first.
 
-### [Mint](https://github.com/yonaskolb/mint)
+#### [Mint](https://github.com/yonaskolb/mint)
 ```sh
 $ mint install yonaskolb/genesis
 ```
@@ -100,19 +100,19 @@ Pass specifc options with `--options` like this
 -- options "option1: value 2, option2: value 2"
 ```
 
-### 4. Interactive input
+#### 4. Interactive input
 Genesis will ask you for any missing options if they are required. You can turn off interactive input with `--non-interactive`.
 
-### 5. Default value
+#### 5. Default value
 Each option can have a default `value` which be used as a fallback. 
 
-### Missing value
+#### Missing value
 If an option is required and still hasn't recieved a value from anywhere, generation will fail.
 
 ## Template
 A genesic template is a yaml or json file that includes a list of `options` and `files`
 
-### Options
+#### Options
 Options are structured input for the `Stencil` templates. They serve as documentation and allow for Genesis to interactively ask for input.
 
 - **name**: This is the name that is referenced in the template as well as the command line
@@ -126,7 +126,7 @@ Options are structured input for the `Stencil` templates. They serve as document
 	- `choice` a string from a list of choices. Requires `choices` to be defined
 	- `array` an array of other options. Requires `options` to be defined.
  
-### Files
+#### Files
 
 - **path**: This is the path the file will be generated at. It can include `Stencil` tags to make it dynamic. This defaults to `template` if present
 - **contents**: A file template string
