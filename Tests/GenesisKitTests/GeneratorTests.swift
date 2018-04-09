@@ -6,7 +6,15 @@ import struct GenesisKit.Option
 
 public class GeneratorTests: XCTestCase {
 
-    func expectGeneration(options: [Option], files: [File], context: Context, expectedFiles: [GeneratedFile]? = nil, expectedContext: Context? = nil, inputs: [String]? = nil, file: StaticString = #file, line: UInt = #line) throws {
+    func expectGeneration(options: [Option] = [],
+                          files: [File] = [],
+                          context: Context = [:],
+                          expectedFiles: [GeneratedFile]? = nil,
+                          expectedContext: Context? = nil,
+                          expectedAnswers: [Answer]? = nil,
+                          inputs: [String]? = nil,
+                          file: StaticString = #file,
+                          line: UInt = #line) throws {
         if let inputs = inputs {
             var inputIndex = -1
             ReadInput.read = {
@@ -31,6 +39,9 @@ public class GeneratorTests: XCTestCase {
         }
         if let expectedContext = expectedContext {
             XCTAssertTrue(NSDictionary(dictionary: expectedContext).isEqual(to: generationResult.context), "Context\n\(generationResult.context)\ndoes not equal\n\(expectedContext)", file: file, line: line)
+        }
+        if let expectedAnswers = expectedAnswers {
+            XCTAssertEqual(generationResult.answers, expectedAnswers, file: file, line: line)
         }
     }
 
@@ -146,7 +157,8 @@ public class GeneratorTests: XCTestCase {
             Option(name: "name"),
             Option(name: "red", question: "Should {{ name }} be red?"),
         ]
-        //TODO: how to test?
+        let expectedAnswers = [Answer(question: "name", answer: "red"), Answer(question: "Should wall be red?", answer: true)]
+        try expectGeneration(options: options, files: [], context: [:], inputs: ["wall", "y"])
     }
 
     func testSetContext() throws {

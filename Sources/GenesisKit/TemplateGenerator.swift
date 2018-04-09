@@ -16,6 +16,7 @@ public class TemplateGenerator {
     let template: GenesisTemplate
     let environment: Environment
     var interactive = true
+    var answers: [Answer] = []
 
     public init(template: GenesisTemplate) throws {
         self.template = template
@@ -24,8 +25,10 @@ public class TemplateGenerator {
 
     public func generate(context: Context, interactive: Bool) throws -> GenerationResult {
         self.interactive = interactive
+        answers = []
         var context: Context = context
-        return try generateSection(template.section, context: &context)
+        let generatedFiles = try generateSection(template.section, context: &context)
+        return GenerationResult(files: generatedFiles, context: context, answers: answers)
     }
 
     fileprivate func getOptionValue(_ option: Option, context: inout Context) throws {
@@ -70,6 +73,8 @@ public class TemplateGenerator {
             try addItem()
         }
 
+        answers.append(Answer(question: question, answer: context[option.name] as Any))
+
         //        if let branch = option.branch[answerString] {
         //            var branchContext: Context = [:]
         //
@@ -96,7 +101,7 @@ public class TemplateGenerator {
         }
     }
 
-    func generateSection(_ section: TemplateSection, context: inout Context) throws -> GenerationResult {
+    func generateSection(_ section: TemplateSection, context: inout Context) throws -> [GeneratedFile] {
         for option in section.options {
             try getOptionValue(option, context: &context)
         }
@@ -138,7 +143,17 @@ public class TemplateGenerator {
             }
         }
 
-        return GenerationResult(files: generatedFiles, context: context)
+        return generatedFiles
+    }
+}
+
+public struct Answer: Equatable {
+    public let question: String
+    public let answer: Any
+
+    public static func == (lhs: Answer, rhs: Answer) -> Bool {
+        return lhs.question == rhs.question &&
+            String(describing: lhs.answer) == String(describing: rhs.answer)
     }
 }
 
@@ -151,6 +166,7 @@ public enum GeneratorError: Error {
 public struct GenerationResult {
     public let files: [GeneratedFile]
     public let context: Context
+    public let answers: [Answer]
 
     public func writeFiles(path: Path) throws {
 
