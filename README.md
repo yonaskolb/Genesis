@@ -64,6 +64,27 @@ $ cd Genesis
 $ make
 ```
 
+### Swift Package Manager
+
+**Use CLI**
+
+```sh
+$ git clone https://github.com/yonaskolb/Genesis.git
+$ cd Genesis
+$ swift run mint
+```
+
+**Use as dependency**
+
+Add the following to your Package.swift file's dependencies:
+
+```swift
+.package(url: "https://github.com/yonaskolb/Genesis.git", from: "0.1.0"),
+```
+
+And then import `GenesisKit`. See [GenesisKit](#genesiskit) for more information.
+
+
 ## Usage
 
 Run `genesis help` for usage instructions
@@ -155,6 +176,28 @@ name: {{ name }}
 {% end if %}
 ```
 
+## GenesisKit
+The library `GenesisKit` can be used to easily provide generation in your own tools.
+
+```swift
+import GenesisKit
+
+// create a context
+let context: [String: Any] = ["name": "hello"]
+
+// create a template, either from a file or programatically
+let template = try GenesisTemplate(path: "template.yml")
+
+// Create the generator
+let generator = try TemplateGenerator(template: template)
+
+// generate the files
+let generationResult = try generator.generate(context: context, interactive: false)
+
+// write the files to disk
+try generationResult.writeFiles(path: "destination")
+
+```
 
 ## Contributions
 Pull requests and issues are welcome
