@@ -6,6 +6,34 @@ import struct GenesisKit.Option
 
 public class GeneratorTests: XCTestCase {
 
+    func expectGeneration(options: [Option], files: [File], context: Context, expectedFiles: [GeneratedFile]? = nil, expectedContext: Context? = nil, inputs: [String]? = nil, file: StaticString = #file, line: UInt = #line) throws {
+        if let inputs = inputs {
+            var inputIndex = -1
+            ReadInput.read = {
+                inputIndex += 1
+                return inputs[inputIndex]
+            }
+        }
+        let template = GenesisTemplate(path: "", section: TemplateSection(files: files, options: options))
+        let generator = try TemplateGenerator(template: template)
+        let generationResult = try generator.generate(context: context, interactive: inputs != nil)
+        if let expectedFiles = expectedFiles {
+            let generatedFiles = generationResult.files.sorted { $0.path < $1.path }
+            let expectedFiles = expectedFiles.sorted { $0.path < $1.path }
+            XCTAssertEqual(generatedFiles.count, expectedFiles.count, file: file, line: line)
+            for (generatedFile, expectedFile) in zip(expectedFiles, generatedFiles) {
+                XCTAssertEqual(generatedFile,
+                               expectedFile,
+                               "\nGENERATED:\n  \(generatedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))\nEXPECTED:\n  \(expectedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))",
+                    file: file,
+                    line: line)
+            }
+        }
+        if let expectedContext = expectedContext {
+            XCTAssertTrue(NSDictionary(dictionary: expectedContext).isEqual(to: generationResult.context), "Context\n\(generationResult.context)\ndoes not equal\n\(expectedContext)", file: file, line: line)
+        }
+    }
+
     func testOptionPassing() throws {
         let options = [Option(name: "name")]
         let files = [File(type: .contents("name: {{ name }}"), path: "{{ name }}.swift")]
@@ -57,6 +85,22 @@ public class GeneratorTests: XCTestCase {
         try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles, inputs: ["1"])
     }
 
+    func testFailsOnMissingRequiredOption() throws {
+        let options = [Option(name: "name", required: true)]
+
+        let template = GenesisTemplate(path: "", section: TemplateSection(files: [], options: options))
+        let generator = try TemplateGenerator(template: template)
+        XCTAssertThrowsError(try generator.generate(context: [:], interactive: false))
+    }
+
+    func testFailsOnMissingFiles() throws {
+        let files = [File(type: .template("invalid"), path: "file")]
+
+        let template = GenesisTemplate(path: "", section: TemplateSection(files: files, options: []))
+        let generator = try TemplateGenerator(template: template)
+        XCTAssertThrowsError(try generator.generate(context: [:], interactive: false))
+    }
+
     func testUsePassedOptionOverDefaultValues() throws {
         let options = [Option(name: "name", value: "default")]
         let files = [File(type: .contents("name: {{ name }}"), path: "{{ name }}.swift")]
@@ -97,27 +141,16 @@ public class GeneratorTests: XCTestCase {
         try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles, inputs: inputs)
     }
 
-    func expectGeneration(options: [Option], files: [File], context: Context, expectedFiles: [GeneratedFile], inputs: [String]? = nil, file: StaticString = #file, line: UInt = #line) throws {
-        if let inputs = inputs {
-            var inputIndex = -1
-            ReadInput.read = {
-                inputIndex += 1
-                return inputs[inputIndex]
-            }
-        }
-        let template = GenesisTemplate(path: "", section: TemplateSection(files: files, options: options))
-        let generator = try TemplateGenerator(template: template)
-        let generationResult = try generator.generate(context: context, interactive: inputs != nil)
-        let generatedFiles = generationResult.files.sorted { $0.path < $1.path }
-        let expectedFiles = expectedFiles.sorted { $0.path < $1.path }
-        XCTAssertEqual(generatedFiles.count, expectedFiles.count, file: file, line: line)
-        for (generatedFile, expectedFile) in zip(expectedFiles, generatedFiles) {
-            XCTAssertEqual(generatedFile,
-                           expectedFile,
-                           "\nGENERATED:\n  \(generatedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))\nEXPECTED:\n  \(expectedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))",
-                    file: file,
-                    line: line)
-        }
+    func testReplaceQuestion() throws {
+        let options = [
+            Option(name: "name"),
+            Option(name: "red", question: "Should {{ name }} be red?"),
+        ]
+        //TODO: how to test?
+    }
 
+    func testSetContext() throws {
+        let options = [Option(name: "color", value: "red")]
+        try expectGeneration(options: options, files: [], context: [:], expectedContext: ["color": "red"])
     }
 }
