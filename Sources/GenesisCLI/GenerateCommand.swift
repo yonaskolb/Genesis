@@ -76,15 +76,13 @@ class GenerateCommand: Command {
         }
 
         let template = try GenesisTemplate(path: templatePath)
-        let generator = try TemplateGenerator(template: template, interactive: !nonInteractive.value)
+        let generator = try TemplateGenerator(template: template)
+        let result = try generator.generate(context: context, interactive: !nonInteractive.value)
 
-        let result = try generator.generate(path: destinationPath, context: context)
+        try result.writeFiles(path: destinationPath)
+
         let filePaths = result.files.map { "  \($0.path.string)" }.joined(separator: "\n")
-        for file in result.files {
-            let path = destinationPath + file.path
-            try path.parent().mkpath()
-            try path.write(file.contents)
-        }
+
         stream.out <<< "Generated files:\n\(filePaths)"
     }
 }

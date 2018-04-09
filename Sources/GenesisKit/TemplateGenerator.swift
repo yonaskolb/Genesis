@@ -15,20 +15,20 @@ public class TemplateGenerator {
 
     let template: GenesisTemplate
     let environment: Environment
-    var interactive: Bool
+    var interactive = true
 
-    public init(template: GenesisTemplate, interactive: Bool) throws {
+    public init(template: GenesisTemplate) throws {
         self.template = template
-        self.interactive = interactive
         self.environment = Environment(loader: FileSystemLoader(paths: [template.path.parent()]), extensions: nil, templateClass: Template.self)
     }
 
-    public func generate(path: Path, context: Context) throws -> GenerationResult {
+    public func generate(context: Context, interactive: Bool) throws -> GenerationResult {
+        self.interactive = interactive
         var context: Context = context
-        return try generateSection(template.section, path: path, context: &context)
+        return try generateSection(template.section, context: &context)
     }
 
-    fileprivate func getOptionValue(_ option: Option, path: Path, context: inout Context) throws {
+    fileprivate func getOptionValue(_ option: Option, context: inout Context) throws {
         if let value = context[option.name] {
             // found existing option
             return
@@ -60,7 +60,7 @@ public class TemplateGenerator {
                 if Input.readBool(prompt: question) {
                     var childContext = Context()
                     for childOption in option.options {
-                        try getOptionValue(childOption, path: path, context: &childContext)
+                        try getOptionValue(childOption, context: &childContext)
                     }
                     array.append(childContext)
                     context[option.name] = array
@@ -88,14 +88,14 @@ public class TemplateGenerator {
         //        }
     }
 
-    func generateSection(_ section: TemplateSection, path: Path, context: inout Context) throws -> GenerationResult {
+    func generateSection(_ section: TemplateSection, context: inout Context) throws -> GenerationResult {
         for option in section.options {
-            try getOptionValue(option, path: path, context: &context)
+            try getOptionValue(option, context: &context)
         }
 
         var generatedFiles: [GeneratedFile] = []
 
-        func generateFile(_ file: File, path: Path, context: Context) throws  {
+        func generateFile(_ file: File, context: Context) throws  {
 
             if let include = file.include {
                 let expression = "{% if \(include) %}true{% endif %}"
@@ -118,15 +118,15 @@ public class TemplateGenerator {
             if let fileContextPath = file.context, let fileContext = context[fileContextPath] {
                 if let array = fileContext as? [Context] {
                     for element in array {
-                        try generateFile(file, path: path, context: element)
+                        try generateFile(file, context: element)
                     }
                 } else if let context = fileContext as? Context {
-                    try generateFile(file, path: path, context: context)
+                    try generateFile(file, context: context)
                 } else {
-                    try generateFile(file, path: path, context: context)
+                    try generateFile(file, context: context)
                 }
             } else {
-                try generateFile(file, path: path, context: context)
+                try generateFile(file, context: context)
             }
         }
 
@@ -143,6 +143,15 @@ public enum GeneratorError: Error {
 public struct GenerationResult {
     public let files: [GeneratedFile]
     public let context: Context
+
+    public func writeFiles(path: Path) throws {
+
+        for file in files {
+            let filePath = path + file.path
+            try filePath.parent().mkpath()
+            try filePath.write(file.contents)
+        }
+    }
 }
 
 public struct GeneratedFile: Equatable, CustomStringConvertible {

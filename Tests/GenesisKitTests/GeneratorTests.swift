@@ -106,8 +106,8 @@ public class GeneratorTests: XCTestCase {
             }
         }
         let template = GenesisTemplate(path: "", section: TemplateSection(files: files, options: options))
-        let generator = try TemplateGenerator(template: template, interactive: inputs != nil)
-        let generationResult = try generator.generate(path: "", context: context)
+        let generator = try TemplateGenerator(template: template)
+        let generationResult = try generator.generate(context: context, interactive: inputs != nil)
         let generatedFiles = generationResult.files.sorted { $0.path < $1.path }
         let expectedFiles = expectedFiles.sorted { $0.path < $1.path }
         XCTAssertEqual(generatedFiles.count, expectedFiles.count, file: file, line: line)
