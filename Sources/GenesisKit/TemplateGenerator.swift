@@ -1,10 +1,3 @@
-//
-//  TemplateRunner.swift
-//  PathKit
-//
-//  Created by Yonas Kolb on 1/4/18.
-//
-
 import Foundation
 import PathKit
 import Stencil
@@ -20,7 +13,7 @@ public class TemplateGenerator {
 
     public init(template: GenesisTemplate) throws {
         self.template = template
-        self.environment = Environment(loader: FileSystemLoader(paths: [template.path.parent()]), extensions: nil, templateClass: Template.self)
+        environment = Environment(loader: FileSystemLoader(paths: [template.path.parent()]), extensions: nil, templateClass: Template.self)
     }
 
     public func generate(context: Context, interactive: Bool) throws -> GenerationResult {
@@ -36,7 +29,7 @@ public class TemplateGenerator {
             // found existing option
             return
         }
-        
+
         if let value = option.value {
             // found default option
             context[option.name] = try replaceString(value, context: context)
@@ -108,7 +101,7 @@ public class TemplateGenerator {
 
         var generatedFiles: [GeneratedFile] = []
 
-        func generateFile(_ file: File, context: Context) throws  {
+        func generateFile(_ file: File, context: Context) throws {
 
             if let include = file.include {
                 let expression = "{% if \(include) %}true{% endif %}"
@@ -119,8 +112,8 @@ public class TemplateGenerator {
             }
             let fileContents: String
             switch file.type {
-            case .template(let path): fileContents = try environment.renderTemplate(name: path, context: context)
-            case .contents(let string): fileContents = try replaceString(string, context: context)
+            case let .template(path): fileContents = try environment.renderTemplate(name: path, context: context)
+            case let .contents(string): fileContents = try replaceString(string, context: context)
             }
             let replacedPath = try replaceString(file.path, context: context)
             let generatedFile = GeneratedFile(path: Path(replacedPath), contents: fileContents)
@@ -183,6 +176,6 @@ public struct GeneratedFile: Equatable, CustomStringConvertible {
     public let contents: String
 
     public var description: String {
-         return path.string
+        return path.string
     }
 }

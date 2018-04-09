@@ -1,6 +1,6 @@
-import XCTest
 import GenesisCLI
 import SwiftCLI
+import XCTest
 
 public class CLITests: XCTestCase {
 
@@ -11,4 +11,3 @@ public class CLITests: XCTestCase {
         XCTAssertEqual(cli.run(arguments: "genesis -h"), 0)
     }
 }
-

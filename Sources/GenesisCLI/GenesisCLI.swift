@@ -1,10 +1,3 @@
-//
-//  Genesis.swift
-//  GenesisCLI
-//
-//  Created by Yonas Kolb on 7/4/18.
-//
-
 import Foundation
 import SwiftCLI
 
@@ -18,7 +11,7 @@ public class GenesisCLI {
         self.stream = stream
         let generateCommand = GenerateCommand(stream: stream)
         cli = CLI(name: "genesis", version: version, description: "genesis templater", commands: [
-            generateCommand
+            generateCommand,
         ])
 //        cli.router = SingleCommandRouter(command: generateCommand)
     }
@@ -31,6 +24,3 @@ public class GenesisCLI {
         }
     }
 }
-
-
-

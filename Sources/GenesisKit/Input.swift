@@ -29,5 +29,4 @@ extension Input {
             return value
         }
     }
-    
 }

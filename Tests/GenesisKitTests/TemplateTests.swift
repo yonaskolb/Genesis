@@ -1,6 +1,6 @@
-import XCTest
 import GenesisKit
 import PathKit
+import XCTest
 
 public class TemplateTests: XCTestCase {
 
@@ -20,10 +20,12 @@ public class TemplateTests: XCTestCase {
                 Option(name: "name", question: "What's the name of the file?"),
                 Option(name: "type", type: .choice, question: "What sort of file?", choices: ["stencil", "swift"]),
                 Option(name: "generate", value: "true", type: .boolean, question: "Should this be generated?"),
-                ])
+            ]),
         ]
-        let expectedTemplate = GenesisTemplate(path: templateFixture,
-                                               section: TemplateSection(files: expectedFiles, options: expectedOptions))
+        let expectedTemplate = GenesisTemplate(
+            path: templateFixture,
+            section: TemplateSection(files: expectedFiles, options: expectedOptions)
+        )
 
         XCTAssertEqual(expectedTemplate, parsedTemplate)
     }

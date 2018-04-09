@@ -1,20 +1,22 @@
-import XCTest
 @testable import GenesisKit
+import struct GenesisKit.Option
 import PathKit
 @testable import SwiftCLI
-import struct GenesisKit.Option
+import XCTest
 
 public class GeneratorTests: XCTestCase {
 
-    func expectGeneration(options: [Option] = [],
-                          files: [File] = [],
-                          context: Context = [:],
-                          expectedFiles: [GeneratedFile]? = nil,
-                          expectedContext: Context? = nil,
-                          expectedAnswers: [Answer]? = nil,
-                          inputs: [String]? = nil,
-                          file: StaticString = #file,
-                          line: UInt = #line) throws {
+    func expectGeneration(
+        options: [Option] = [],
+        files: [File] = [],
+        context: Context = [:],
+        expectedFiles: [GeneratedFile]? = nil,
+        expectedContext: Context? = nil,
+        expectedAnswers: [Answer]? = nil,
+        inputs: [String]? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
         if let inputs = inputs {
             var inputIndex = -1
             ReadInput.read = {
@@ -30,11 +32,13 @@ public class GeneratorTests: XCTestCase {
             let expectedFiles = expectedFiles.sorted { $0.path < $1.path }
             XCTAssertEqual(generatedFiles.count, expectedFiles.count, file: file, line: line)
             for (generatedFile, expectedFile) in zip(expectedFiles, generatedFiles) {
-                XCTAssertEqual(generatedFile,
-                               expectedFile,
-                               "\nGENERATED:\n  \(generatedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))\nEXPECTED:\n  \(expectedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))",
+                XCTAssertEqual(
+                    generatedFile,
+                    expectedFile,
+                    "\nGENERATED:\n  \(generatedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))\nEXPECTED:\n  \(expectedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))",
                     file: file,
-                    line: line)
+                    line: line
+                )
             }
         }
         if let expectedContext = expectedContext {
@@ -70,7 +74,7 @@ public class GeneratorTests: XCTestCase {
             File(type: .contents("b"), path: "b", include: "type == 'b'"),
             File(type: .contents("c"), path: "c", include: "includeFileC"),
             File(type: .contents("d"), path: "d", include: "includeFileD"),
-            ]
+        ]
         let expectedFiles = [
             GeneratedFile(path: "a", contents: "a"),
             GeneratedFile(path: "c", contents: "c"),
@@ -124,12 +128,12 @@ public class GeneratorTests: XCTestCase {
         let files = [
             File(type: .contents("name: {{ name }}"), path: "{{ name }}.swift", context: "targets"),
             File(type: .contents("header"), path: "{{ name }}.h", include: "name == 'framework'", context: "targets"),
-            ]
+        ]
         let expectedFiles = [
             GeneratedFile(path: "app.swift", contents: "name: app"),
             GeneratedFile(path: "framework.swift", contents: "name: framework"),
             GeneratedFile(path: "framework.h", contents: "header"),
-            ]
+        ]
         let context: Context = ["targets": [["name": "app"], ["name": "framework"]]]
         try expectGeneration(options: options, files: files, context: context, expectedFiles: expectedFiles)
     }
@@ -148,7 +152,7 @@ public class GeneratorTests: XCTestCase {
         let expectedFiles = [
             GeneratedFile(path: "app.swift", contents: "name: app"),
             GeneratedFile(path: "framework.swift", contents: "name: framework"),
-            ]
+        ]
         try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles, inputs: inputs)
     }
 
@@ -170,7 +174,7 @@ public class GeneratorTests: XCTestCase {
         let options = [
             Option(name: "color", required: true),
             Option(name: "isRed", value: "{% if color == 'red' %}true{% endif %}"),
-            ]
+        ]
         try expectGeneration(options: options, files: [], context: [:], expectedContext: ["color": "red", "isRed": "true"], inputs: ["red"])
     }
 }

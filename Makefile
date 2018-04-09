@@ -27,6 +27,8 @@ uninstall:
 format_code:
 	swiftformat Tests --wraparguments beforefirst --stripunusedargs closure-only --header strip --disable blankLinesAtStartOfScope
 	swiftformat Sources --wraparguments beforefirst --stripunusedargs closure-only --header strip --disable blankLinesAtStartOfScope
+	git add .
+	git commit -m "Format code with `swiftformat --version`"
 
 update_brew:
 	sed -i '' 's|\(url ".*/archive/\)\(.*\)\(.tar\)|\1$(VERSION)\3|' $(FORMULA)

@@ -1,12 +1,12 @@
 
-import SwiftCLI
+import Foundation
 import GenesisKit
 import PathKit
-import Foundation
+import SwiftCLI
 import Yams
 
 class GenerateCommand: Command {
-    
+
     let name = "generate"
     let shortDescription = "Generates files based on a template"
 
