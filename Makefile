@@ -1,6 +1,6 @@
 TOOL_NAME = Genesis
 export EXECUTABLE_NAME = genesis
-VERSION = 0.1.0
+VERSION = 0.2.0
 
 PREFIX = /usr/local
 INSTALL_PATH = $(PREFIX)/bin/$(EXECUTABLE_NAME)
@@ -27,6 +27,8 @@ uninstall:
 format_code:
 	swiftformat Tests --wraparguments beforefirst --stripunusedargs closure-only --header strip --disable blankLinesAtStartOfScope
 	swiftformat Sources --wraparguments beforefirst --stripunusedargs closure-only --header strip --disable blankLinesAtStartOfScope
+
+commit_format_code: format_code
 	git add .
 	git commit -m "Format code with `swiftformat --version`"
 
@@ -38,7 +40,7 @@ update_brew:
 	git commit -m "Update brew to $(VERSION)"
 
 release: format_code
-	sed -i '' 's|\(let version = "\)\(.*\)\("\)|\1$(VERSION)\3|' Sources/XcodeGen/main.swift
+	sed -i '' 's|\(let version = "\)\(.*\)\("\)|\1$(VERSION)\3|' Sources/GenesisCLI/GenesisCLI.swift
 
 	git add .
 	git commit -m "Update to $(VERSION)"

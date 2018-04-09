@@ -3,7 +3,7 @@ import SwiftCLI
 
 public class GenesisCLI {
 
-    public let version: String = "0.1.0"
+    public let version = "0.2.0"
     let cli: CLI
     let stream: Streams
 
