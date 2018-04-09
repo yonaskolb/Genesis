@@ -7,6 +7,7 @@ let package = Package(
     name: "Genesis",
     products: [
         .executable(name: "genesis", targets: ["Genesis"]),
+        .library(name: "GenesisKit", targets: ["GenesisKit"]),
     ],
     dependencies: [
         .package(url: "https://github.com/kylef/Stencil", from: "0.11.0"),
@@ -17,12 +18,10 @@ let package = Package(
         .package(url: "https://github.com/kylef/Spectre", from: "0.8.0"),
     ],
     targets: [
-        .target(name: "Genesis", dependencies: ["CLI"]),
-        .target(name: "CLI", dependencies: ["Generator", "GenesisTemplate", "SwiftCLI"]),
-        .target(name: "GenesisTemplate", dependencies: ["Yams", "PathKit"]),
-        .target(name: "Generator", dependencies: ["GenesisTemplate", "SwiftCLI", "Stencil", "PathKit", "Rainbow"]),
-        .testTarget(name: "CLITests", dependencies: ["CLI", "Spectre"]),
-        .testTarget(name: "GeneratorTests", dependencies: ["Generator", "GenesisTemplate", "Spectre"]),
-        .testTarget(name: "TemplateTests", dependencies: ["GenesisTemplate", "Spectre"]),
+        .target(name: "Genesis", dependencies: ["GenesisCLI"]),
+        .target(name: "GenesisCLI", dependencies: ["GenesisKit", "SwiftCLI"]),
+        .target(name: "GenesisKit", dependencies: ["SwiftCLI", "Stencil", "Yams", "PathKit", "Rainbow"]),
+        .testTarget(name: "GenesisCLITests", dependencies: ["GenesisCLI", "Spectre"]),
+        .testTarget(name: "GenesisKitTests", dependencies: ["GenesisKit", "Spectre"]),
     ]
 )

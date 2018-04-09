@@ -1,4 +1,4 @@
-import CLI
+import GenesisCLI
 import Foundation
 
 let cli = GenesisCLI()

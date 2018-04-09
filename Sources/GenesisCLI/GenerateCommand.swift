@@ -1,8 +1,7 @@
 
 import SwiftCLI
-import Generator
+import GenesisKit
 import PathKit
-import GenesisTemplate
 import Foundation
 import Yams
 

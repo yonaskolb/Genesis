@@ -1,5 +1,5 @@
 import XCTest
-import CLI
+import GenesisCLI
 import SwiftCLI
 
 public class CLITests: XCTestCase {

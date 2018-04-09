@@ -1,5 +1,5 @@
 import XCTest
-import GenesisTemplate
+import GenesisKit
 import PathKit
 
 public class TemplateTests: XCTestCase {

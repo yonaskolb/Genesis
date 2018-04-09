@@ -7,10 +7,8 @@
 
 import Foundation
 import PathKit
-import GenesisTemplate
 import Stencil
 import SwiftCLI
-import struct GenesisTemplate.Option
 
 public typealias Context = [String: Any]
 public class TemplateGenerator {

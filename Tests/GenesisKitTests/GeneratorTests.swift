@@ -1,9 +1,8 @@
 import XCTest
-@testable import Generator
-@testable import GenesisTemplate
+@testable import GenesisKit
 import PathKit
 @testable import SwiftCLI
-import struct GenesisTemplate.Option
+import struct GenesisKit.Option
 
 public class GeneratorTests: XCTestCase {
 
