@@ -146,8 +146,8 @@ A genesic template is a yaml or json file that includes a list of `options` and 
 Options are structured input for the `Stencil` templates. They serve as documentation and allow for Genesis to interactively ask for input.
 
 - **name**: This is the name that is referenced in the template as well as the command line
-- **value**: This is the default value that will be used if none are provided
-- **question**: The question that is asked when asking for input
+- **value**: This is the default value that will be used if none are provided. This can have Stencil tags in it
+- **question**: The question that is asked when asking for input. This can have Stencil tags in it
 - **description**: An extended description of the option and what it does
 - **required**: Whether this option is required or not for the template to generate. If it is not provided via the command line, option file, or input, generation will fail
 - **type**: This is the type of option. It defaults to `string` but can be any one of the following:

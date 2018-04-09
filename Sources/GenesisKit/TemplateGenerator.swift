@@ -36,7 +36,7 @@ public class TemplateGenerator {
         
         if let value = option.value {
             // found default option
-            context[option.name] = value
+            context[option.name] = try replaceString(value, context: context)
             return
         }
 
@@ -48,7 +48,7 @@ public class TemplateGenerator {
             }
         }
 
-        let question = option.question ?? option.name
+        let question = try option.question.flatMap { try replaceString($0, context: context) } ?? option.name
 
         switch option.type {
         case .choice: context[option.name] = Input.readOption(options: option.choices, prompt: question)
@@ -88,6 +88,14 @@ public class TemplateGenerator {
         //        }
     }
 
+    func replaceString(_ string: String, context: Context) throws -> String {
+        if string.contains("{") {
+            return try environment.renderTemplate(string: string, context: context)
+        } else {
+            return string
+        }
+    }
+
     func generateSection(_ section: TemplateSection, context: inout Context) throws -> GenerationResult {
         for option in section.options {
             try getOptionValue(option, context: &context)
@@ -99,17 +107,17 @@ public class TemplateGenerator {
 
             if let include = file.include {
                 let expression = "{% if \(include) %}true{% endif %}"
-                let parsedIf = try environment.renderTemplate(string: expression, context: context)
+                let parsedIf = try replaceString(expression, context: context)
                 if parsedIf == "" {
                     return
                 }
             }
             let fileContents: String
             switch file.type {
-            case .contents(let string): fileContents = try environment.renderTemplate(string: string, context: context)
             case .template(let path): fileContents = try environment.renderTemplate(name: path, context: context)
+            case .contents(let string): fileContents = try replaceString(string, context: context)
             }
-            let replacedPath = try environment.renderTemplate(string: file.path, context: context)
+            let replacedPath = try replaceString(file.path, context: context)
             let generatedFile = GeneratedFile(path: Path(replacedPath), contents: fileContents)
             generatedFiles.append(generatedFile)
         }

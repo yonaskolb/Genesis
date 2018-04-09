@@ -153,4 +153,12 @@ public class GeneratorTests: XCTestCase {
         let options = [Option(name: "color", value: "red")]
         try expectGeneration(options: options, files: [], context: [:], expectedContext: ["color": "red"])
     }
+
+    func testReplaceDefaultValue() throws {
+        let options = [
+            Option(name: "color", required: true),
+            Option(name: "isRed", value: "{% if color == 'red' %}true{% endif %}"),
+            ]
+        try expectGeneration(options: options, files: [], context: [:], expectedContext: ["color": "red", "isRed": "true"], inputs: ["red"])
+    }
 }
