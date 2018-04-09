@@ -1,12 +1,12 @@
 
-public struct File: Decodable {
+public struct File: Equatable, Decodable {
 
     public var type: FileType
     public var path: String
     public var include: String?
     public var context: String?
 
-    public enum FileType {
+    public enum FileType: Equatable {
         case template(String)
         case contents(String)
     }

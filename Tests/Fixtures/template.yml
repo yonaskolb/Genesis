@@ -1,65 +1,32 @@
-
 options:
   - name: project
     description: The name of the project
     question: What is the name of your project?
     required: true
     type: string
-  - name: targets
-    description: The list of targets
-    question: Do you wish to add a target?
+    value: Project
+  - name: files
+    description: The list of files
+    question: Do you wish to add a file?
     type: array
-    repeatAnswer: "true"
-    set: array
     options:
       - name: name
-        question: What's the name of the target?
+        question: What's the name of the file?
         type: string
-        setOption: currentTarget.{{ target }}
       - name: type
-        question: What sort of target?
+        question: What sort of file?
         type: choice
-        set: targets.{{ target }}
         choices:
-          - application
-          - framework
-      - name: platform
-        question: What platform?
-        type: choice
-        set: targets.{{ target }}
-        choices:
-         - iOS
-         - macOS
-         - tvOS
-         - watchOS
-    branch:
-      true:
-        options:
-          - name: name
-            question: What's the name of the target?
-            setOption: currentTarget.{{ target }}
-          - name: type
-            question: What sort of target?
-            type: choice
-            set: targets.{{ target }}
-            choices:
-              - application
-              - framework
-          - name: platform
-            question: What platform?
-            type: choice
-            set: targets.{{ target }}
-            choices:
-             - iOS
-             - macOS
-             - tvOS
-             - watchOS
-        files:
-          - template: Target/ApplicationDelegate.swift
-            path: "{{ name }}/ApplicationDelegate.swift"
-            include: type == application
+          - stencil
+          - swift
+      - name: generate
+        question: Should this be generated?
+        type: boolean
+        value: true
 files:
-  - template: project.yml
-  - template: Target/ApplicationDelegate.swift
-    path: "{{ name }}/ApplicationDelegate.swift"
-    context: targets
+  - template: Project.stencil
+    path: "{{ name }}.swift"
+  - contents: "File {{ name }} of type {{ type }}"
+    path: "{{ name }}.{{ type }}"
+    context: files
+    include: generate

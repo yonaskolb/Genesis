@@ -1,7 +1,7 @@
 import Yams
 import PathKit
 
-public struct GenesisTemplate {
+public struct GenesisTemplate: Equatable {
     public var section: TemplateSection
     public var path: Path
 
@@ -22,7 +22,7 @@ public struct GenesisTemplate {
     }
 }
 
-public struct TemplateSection: Decodable {
+public struct TemplateSection: Equatable, Decodable {
     public var options: [Option]
     public var files: [File]
 
