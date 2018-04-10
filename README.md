@@ -7,7 +7,7 @@
 
 Genesis is a templating and scaffolding tool.
 
-A Genesis template is a manifest of options and files written in yaml or json. Option values can be provided in [various ways](#providing-options) otherwise you will be interactivly asked for inputs. Template files are written in [Stencil](https://github.com/kylef/Stencil). The list of files can make use of dynamic paths and be generated multiple times depending on the format of the input.
+A Genesis template is a manifest of options and files written in yaml or json. Option values can be provided in [various ways](#providing-options) otherwise you will be interactively asked for inputs. Template files are written in [Stencil](https://github.com/kylef/Stencil). The list of files can make use of dynamic paths and be generated multiple times depending on the format of the input.
 
 - ✅ Template manifests in easy to read and write **yaml or json**
 - ✅ Template files in **Stencil**
@@ -124,7 +124,7 @@ targets:
 ```
 
 #### 3. Options Argument
-Pass specifc options with `--options` like this
+Pass specific options with `--options` like this
 
 ```
 -- options "option1: value 2, option2: value 2"
@@ -137,10 +137,10 @@ Genesis will ask you for any missing options if they are required. You can turn 
 Each option can have a default `value` which be used as a fallback. 
 
 #### Missing value
-If an option is required and still hasn't recieved a value from anywhere, generation will fail.
+If an option is required and still hasn't received a value from anywhere, generation will fail.
 
 ## Template
-A genesic template is a yaml or json file that includes a list of `options` and `files`
+A genesis template is a yaml or json file that includes a list of `options` and `files`
 
 #### Options
 Options are structured input for the `Stencil` templates. They serve as documentation and allow for Genesis to interactively ask for input.
@@ -185,7 +185,7 @@ import GenesisKit
 // create a context
 let context: [String: Any] = ["name": "hello"]
 
-// create a template, either from a file or programatically
+// create a template, either from a file or programmatically
 let template = try GenesisTemplate(path: "template.yml")
 
 // Create the generator
