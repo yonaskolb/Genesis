@@ -1,5 +1,6 @@
 import Foundation
 import PathKit
+import StencilSwiftKit
 import Stencil
 import SwiftCLI
 
@@ -11,9 +12,15 @@ public class TemplateGenerator {
     var interactive = true
     var answers: [Answer] = []
 
-    public init(template: GenesisTemplate) throws {
+    public init(template: GenesisTemplate, environment: Environment? = nil) throws {
         self.template = template
-        environment = Environment(loader: FileSystemLoader(paths: [template.path.parent()]), extensions: nil, templateClass: Template.self)
+        if let environment = environment {
+            self.environment = environment
+        } else {
+            var environment = stencilSwiftEnvironment()
+            environment.loader = FileSystemLoader(paths: [template.path.parent()])
+            self.environment = environment
+        }
     }
 
     public func generate(context: Context, interactive: Bool) throws -> GenerationResult {

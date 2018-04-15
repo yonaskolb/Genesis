@@ -177,4 +177,29 @@ public class GeneratorTests: XCTestCase {
         ]
         try expectGeneration(options: options, files: [], context: [:], expectedContext: ["color": "red", "isRed": "true"], inputs: ["red"])
     }
+
+    func testStencilFormatting() throws {
+
+        let stencil = """
+
+        {% if name %}
+        let name = {{ name }}
+        {% endif %}
+
+        {% for color in colors %}
+          - {{ color }}
+        {% endfor %}
+
+        """
+        let expectedOutput = """
+
+        let name = hello
+
+          - red
+          - blue
+
+        """
+        let context: Context = ["name": "hello", "colors": ["red", "blue"]]
+        try expectGeneration(files: [File(type: .contents(stencil), path: "")], context: context, expectedFiles: [GeneratedFile(path: "", contents: expectedOutput)])
+    }
 }

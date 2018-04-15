@@ -10,9 +10,9 @@ let package = Package(
         .library(name: "GenesisKit", targets: ["GenesisKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/kylef/Stencil", from: "0.11.0"),
+        .package(url: "https://github.com/SwiftGen/StencilSwiftKit", from: "2.5.0"),
         .package(url: "https://github.com/jpsim/Yams", from: "0.7.0"),
-        .package(url: "https://github.com/kylef/PathKit", from: "0.8.0"),
+        .package(url: "https://github.com/kylef/PathKit", from: "0.9.0"),
         .package(url: "https://github.com/onevcat/Rainbow", from: "3.1.1"),
         .package(url: "https://github.com/jakeheis/SwiftCLI", from: "4.2.0"),
         .package(url: "https://github.com/kylef/Spectre", from: "0.8.0"),
@@ -20,7 +20,7 @@ let package = Package(
     targets: [
         .target(name: "Genesis", dependencies: ["GenesisCLI"]),
         .target(name: "GenesisCLI", dependencies: ["GenesisKit", "SwiftCLI"]),
-        .target(name: "GenesisKit", dependencies: ["SwiftCLI", "Stencil", "Yams", "PathKit", "Rainbow"]),
+        .target(name: "GenesisKit", dependencies: ["SwiftCLI", "StencilSwiftKit", "Yams", "PathKit", "Rainbow"]),
         .testTarget(name: "GenesisCLITests", dependencies: ["GenesisCLI", "Spectre"]),
         .testTarget(name: "GenesisKitTests", dependencies: ["GenesisKit", "Spectre"]),
     ]
