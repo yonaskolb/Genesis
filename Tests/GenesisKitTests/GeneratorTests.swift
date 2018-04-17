@@ -159,10 +159,10 @@ public class GeneratorTests: XCTestCase {
     func testReplaceQuestion() throws {
         let options = [
             Option(name: "name"),
-            Option(name: "red", question: "Should {{ name }} be red?"),
+            Option(name: "red", type: .boolean, question: "Should {{ name }} be red?"),
         ]
-        let expectedAnswers = [Answer(question: "name", answer: "red"), Answer(question: "Should wall be red?", answer: true)]
-        try expectGeneration(options: options, files: [], context: [:], inputs: ["wall", "y"])
+        let expectedAnswers = [Answer(question: "name", answer: Optional("wall") as Any), Answer(question: "Should wall be red?", answer: Optional(true) as Any)]
+        try expectGeneration(options: options, files: [], context: [:], expectedAnswers: expectedAnswers, inputs: ["wall", "y"])
     }
 
     func testSetContext() throws {
