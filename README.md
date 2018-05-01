@@ -1,9 +1,9 @@
 # Genesis
 
-[![SPM](https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat)](https://swift.org/package-manager)
-[![Git Version](https://img.shields.io/github/release/yonaskolb/Genesis.svg)](https://github.com/yonaskolb/Genesis/releases)
-[![Build Status](https://img.shields.io/circleci/project/github/yonaskolb/Genesis.svg?style=flat)](https://circleci.com/gh/yonaskolb/Genesis)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/yonaskolb/Genesis/blob/master/LICENSE)
+[![SPM](https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=for-the-badge)](https://swift.org/package-manager)
+[![Git Version](https://img.shields.io/github/release/yonaskolb/Genesis.svg?style=for-the-badge)](https://github.com/yonaskolb/Genesis/releases)
+[![Build Status](https://img.shields.io/circleci/project/github/yonaskolb/Genesis.svg?style=for-the-badge)](https://circleci.com/gh/yonaskolb/Genesis)
+[![license](https://img.shields.io/github/license/yonaskolb/Genesis.svg?style=for-the-badge)](https://github.com/yonaskolb/Genesis/blob/master/LICENSE)
 
 Genesis is a templating and scaffolding tool.
 
