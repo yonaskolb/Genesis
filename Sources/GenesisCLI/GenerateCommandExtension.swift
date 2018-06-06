@@ -1,3 +1,9 @@
+import Foundation
+import GenesisKit
+import PathKit
+import SwiftCLI
+import Yams
+import ShellOut
 
 extension GenerateCommand {
   
