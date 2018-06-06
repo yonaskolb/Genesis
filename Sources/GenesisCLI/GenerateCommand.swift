@@ -27,7 +27,9 @@ class GenerateCommand: Command {
     }
 
     func execute() throws {
-        let templatePath = Path(self.templatePath.value).absolute()
+        
+        // REMOVE: let templatePath = Path(self.templatePath.value).absolute()
+        let templatePath = determinePath(from: self.templatePath.value)
         let destinationPath = self.destinationPath.value.flatMap { Path($0) }?.absolute() ?? Path()
 
         var context: Context = [:]
