@@ -19,7 +19,7 @@ extension GenerateCommand {
       3. Each download replaces prior versions of the template
 
     */
-    func determinePath(from: String) -> Path {
+    func determinePath(from source: String) -> Path {
 
       if
         from.contains("http")  ||
@@ -29,7 +29,9 @@ extension GenerateCommand {
 
         do {
 
-          let project = URL(string: from)!.lastPathComponent.components(separatedBy: ".")[0]
+          print("generating template from \(source)")
+
+          let project = URL(string: source)!.lastPathComponent.components(separatedBy: ".")[0]
 
           let mkdirCommand  = try shellOut(to: "ls .genesis 2>/dev/null || mkdir .genesis", at: "~")
 
@@ -37,10 +39,13 @@ extension GenerateCommand {
           let deleteCommand = try shellOut(to: "rm -rf .genesis/\(project)", at: "~")
 
           print("cloning repository")
-          let cloneCommand = try shellOut(to: "git clone --verbose \(from)", at: "~/.genesis")
+          let cloneCommand = try shellOut(to: "git clone --verbose \(source)", at: "~/.genesis")
           print(cloneCommand)
 
-          return Path("~/.genesis/\(project)/template.yml").absolute()
+          let path = Path("~/.genesis/\(project)/template.yml").absolute()
+          print("new template available at \(path)")
+
+          return path
 
         } catch {
 
