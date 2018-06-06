@@ -22,9 +22,9 @@ extension GenerateCommand {
     func determinePath(from source: String) -> Path {
 
       if
-        from.contains("http")  ||
-        from.contains("https") ||
-        from.contains("git")
+        source.contains("http")  ||
+        source.contains("https") ||
+        source.contains("git")
       {
 
         do {
@@ -56,7 +56,7 @@ extension GenerateCommand {
 
       } else {
 
-        return Path(from).absolute()
+        return Path(source).absolute()
 
       }
 
