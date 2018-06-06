@@ -38,6 +38,7 @@ extension GenerateCommand {
 
           print("cloning repository")
           let cloneCommand = try shellOut(to: "git clone --verbose \(from)", at: "~/.genesis")
+          print(cloneCommand)
 
           return Path("~/.genesis/\(project)/template.yml").absolute()
 
