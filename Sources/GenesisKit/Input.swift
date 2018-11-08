@@ -18,7 +18,7 @@ extension Input {
             return options.contains(input)
         }
         let errorResponse: InputReader<String>.ErrorResponse = { _ in
-            printError("You must respond with one of the following:\n\(optionsString)")
+            WriteStream.stderr.print("You must respond with one of the following:\n\(optionsString)")
         }
         let value = readObject(prompt: prompt, secure: false, validation: validation, errorResponse: errorResponse)
         if options.contains(value) {
