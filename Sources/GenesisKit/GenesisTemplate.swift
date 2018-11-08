@@ -1,5 +1,5 @@
-import Yams
 import PathKit
+import Yams
 
 public struct GenesisTemplate: Equatable {
     public var section: TemplateSection

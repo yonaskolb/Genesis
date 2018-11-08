@@ -1,7 +1,7 @@
 import Foundation
 import PathKit
-import StencilSwiftKit
 import Stencil
+import StencilSwiftKit
 import SwiftCLI
 
 public typealias Context = [String: Any]
