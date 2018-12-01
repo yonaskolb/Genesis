@@ -175,7 +175,7 @@ Small example:
 ```
 {% if name %}
 name: {{ name }}
-{% end if %}
+{% endif %}
 ```
 
 ## GenesisKit
