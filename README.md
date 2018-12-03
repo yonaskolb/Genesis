@@ -26,7 +26,7 @@ options:
     type: string
 files:
   - template: project.stencil
-    path: "{{ name }}.project
+    path: "{{ project }}.project"
 ```
 
 And then run like this:
