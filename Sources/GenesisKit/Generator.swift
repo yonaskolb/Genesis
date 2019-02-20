@@ -1,26 +1,18 @@
 import Foundation
 import PathKit
-import Stencil
 import StencilSwiftKit
 import SwiftCLI
 
-public typealias Context = [String: Any]
-public class TemplateGenerator {
+public class Generator {
 
-    let template: GenesisTemplate
-    let environment: Environment
+    let renderer: Renderer
+    let template: Template
     var interactive = true
     var answers: [Answer] = []
 
-    public init(template: GenesisTemplate, environment: Environment? = nil) throws {
+    public init(template: Template, renderer: Renderer? = nil) {
         self.template = template
-        if let environment = environment {
-            self.environment = environment
-        } else {
-            var environment = stencilSwiftEnvironment()
-            environment.loader = FileSystemLoader(paths: [template.path.parent()])
-            self.environment = environment
-        }
+        self.renderer = renderer ?? stencilRenderer(templatePaths: [template.path.parent()])
     }
 
     public func generate(context: Context, interactive: Bool) throws -> GenerationResult {
@@ -95,7 +87,7 @@ public class TemplateGenerator {
 
     func replaceString(_ string: String, context: Context) throws -> String {
         if string.contains("{") {
-            return try environment.renderTemplate(string: string, context: context)
+            return try renderer.renderTemplate(string: string, context: context)
         } else {
             return string
         }
@@ -119,7 +111,7 @@ public class TemplateGenerator {
             }
             let fileContents: String
             switch file.type {
-            case let .template(path): fileContents = try environment.renderTemplate(name: path, context: context)
+            case let .template(path): fileContents = try renderer.renderTemplate(name: path, context: context)
             case let .contents(string): fileContents = try replaceString(string, context: context)
             }
             let replacedPath = try replaceString(file.path, context: context)
@@ -158,8 +150,6 @@ public struct Answer: Equatable {
 }
 
 public enum GeneratorError: Error {
-    case templateSyntax(TemplateSyntaxError)
-    case missingTemplate(TemplateDoesNotExist)
     case missingOption(Option)
 }
 
@@ -167,22 +157,22 @@ public struct GenerationResult {
     public let files: [GeneratedFile]
     public let context: Context
     public let answers: [Answer]
-
-    public func writeFiles(path: Path) throws {
-
-        for file in files {
-            let filePath = path + file.path
-            try filePath.parent().mkpath()
-            try filePath.write(file.contents)
-        }
-    }
 }
 
-public struct GeneratedFile: Equatable, CustomStringConvertible {
+public struct GeneratedFile: Equatable, CustomStringConvertible, CustomDebugStringConvertible {
     public let path: Path
     public let contents: String
 
+    init(path: Path, contents: String) {
+        self.path = path
+        self.contents = contents
+    }
+
     public var description: String {
         return path.string
+    }
+
+    public var debugDescription: String {
+        return "Path: \(path.string)\nContents:\n\(contents)"
     }
 }

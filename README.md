@@ -188,17 +188,22 @@ import GenesisKit
 let context: [String: Any] = ["name": "hello"]
 
 // create a template, either from a file or programmatically
-let template = try GenesisTemplate(path: "template.yml")
+let template = try Template(path: "template.yml")
 
 // Create the generator
-let generator = try TemplateGenerator(template: template)
+let generator = Generator(template: template)
 
 // generate the files
 let generationResult = try generator.generate(context: context, interactive: false)
 
-// write the files to disk
-try generationResult.writeFiles(path: "destination")
+// Create the writer
+let writer = Writer()
 
+// write the files to disk
+let writeResult = try writer.writeFiles(generationResult.files, to: "destination", clean: .none)
+
+// print the results
+print(writerResult)
 ```
 
 ## Contributions

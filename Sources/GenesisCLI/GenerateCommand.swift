@@ -75,14 +75,12 @@ class GenerateCommand: Command {
             }
         }
 
-        let template = try GenesisTemplate(path: templatePath)
-        let generator = try TemplateGenerator(template: template)
-        let result = try generator.generate(context: context, interactive: !nonInteractive.value)
+        let template = try Template(path: templatePath)
+        let generator = Generator(template: template)
+        let generationResult = try generator.generate(context: context, interactive: !nonInteractive.value)
+        let writer = Writer()
+        let writeResult = try writer.writeFiles(generationResult.files, to: destinationPath, clean: .none)
 
-        try result.writeFiles(path: destinationPath)
-
-        let filePaths = result.files.map { "  \($0.path.string)" }.joined(separator: "\n")
-
-        stream.out <<< "Generated files:\n\(filePaths)"
+        stream.out <<< writeResult.changedDescription(includeModifiedContent: true)
     }
 }

@@ -10,9 +10,11 @@ public class GenesisCLI {
     public init(stream: Streams = .default) {
         self.stream = stream
         let generateCommand = GenerateCommand(stream: stream)
-        cli = CLI(name: "genesis", version: version, description: "genesis templater", commands: [
-            generateCommand,
-        ])
+        cli = CLI(
+            name: "genesis", version: version, description: "genesis templater", commands: [
+                generateCommand,
+            ]
+        )
 //        cli.router = SingleCommandRouter(command: generateCommand)
     }
 

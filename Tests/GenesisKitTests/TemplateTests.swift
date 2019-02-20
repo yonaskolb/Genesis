@@ -8,7 +8,7 @@ public class TemplateTests: XCTestCase {
 
     func testTemplateParsing() throws {
         let templateFixture = fixturePath + "template.yml"
-        let parsedTemplate = try GenesisTemplate(path: templateFixture)
+        let parsedTemplate = try Template(path: templateFixture)
 
         let expectedFiles: [File] = [
             File(type: .template("Project.stencil"), path: "{{ name }}.swift"),
@@ -22,7 +22,7 @@ public class TemplateTests: XCTestCase {
                 Option(name: "generate", value: "true", type: .boolean, question: "Should this be generated?"),
             ]),
         ]
-        let expectedTemplate = GenesisTemplate(
+        let expectedTemplate = Template(
             path: templateFixture,
             section: TemplateSection(files: expectedFiles, options: expectedOptions)
         )
