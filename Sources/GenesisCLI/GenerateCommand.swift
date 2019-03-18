@@ -76,10 +76,16 @@ class GenerateCommand: Command {
         }
 
         let template = try Template(path: templatePath)
-        let generator = Generator(template: template)
-        let generationResult = try generator.generate(context: context, interactive: !nonInteractive.value)
+        let contextResolver = ContextResolver(template: template, interactive: !nonInteractive.value)
+        context = try contextResolver.resolveOptions(context: context)
+        if let optionPath = self.optionPath.value {
+            let optionFile = Path(optionPath)
+            context = try contextResolver.resolveOptionFile(optionFile, context: context)
+        }
+        let fileGenerator = FileGenerator(template: template)
+        let generatedFiles = try fileGenerator.generate(context: context)
         let writer = Writer()
-        let writeResult = try writer.writeFiles(generationResult.files, to: destinationPath, clean: .none)
+        let writeResult = try writer.writeFiles(generatedFiles, to: destinationPath, clean: .none)
 
         stream.out <<< writeResult.changedDescription(includeModifiedContent: true)
     }

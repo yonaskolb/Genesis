@@ -4,6 +4,14 @@ import Yams
 public struct Template: Equatable {
     public var section: TemplateSection
     public var path: Path
+    
+    public var options: [Option] {
+        return section.options
+    }
+
+    public var files: [File] {
+        return section.files
+    }
 
     public init(path: Path, section: TemplateSection) {
         self.path = path

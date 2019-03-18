@@ -25,7 +25,7 @@ public class GeneratorTests: XCTestCase {
             }
         }
         let template = Template(path: "", section: TemplateSection(files: files, options: options))
-        let generator = Generator(template: template)
+        let generator = FileGenerator(template: template)
         let generationResult = try generator.generate(context: context, interactive: inputs != nil)
         if let expectedFiles = expectedFiles {
             let generatedFiles = generationResult.files.sorted { $0.path < $1.path }
@@ -104,7 +104,7 @@ public class GeneratorTests: XCTestCase {
         let options = [Option(name: "name", required: true)]
 
         let template = Template(path: "", section: TemplateSection(files: [], options: options))
-        let generator = Generator(template: template)
+        let generator = FileGenerator(template: template)
         XCTAssertThrowsError(try generator.generate(context: [:], interactive: false))
     }
 
@@ -112,7 +112,7 @@ public class GeneratorTests: XCTestCase {
         let files = [File(type: .template("invalid"), path: "file")]
 
         let template = Template(path: "", section: TemplateSection(files: files, options: []))
-        let generator = Generator(template: template)
+        let generator = FileGenerator(template: template)
         XCTAssertThrowsError(try generator.generate(context: [:], interactive: false))
     }
 
