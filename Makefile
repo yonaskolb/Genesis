@@ -1,6 +1,6 @@
 TOOL_NAME = Genesis
 export EXECUTABLE_NAME = genesis
-VERSION = 0.3.0
+VERSION = 0.4.0
 
 PREFIX = /usr/local
 INSTALL_PATH = $(PREFIX)/bin/$(EXECUTABLE_NAME)
@@ -39,7 +39,7 @@ update_brew:
 	git add .
 	git commit -m "Update brew to $(VERSION)"
 
-release: format_code
+release:
 	sed -i '' 's|\(let version = "\)\(.*\)\("\)|\1$(VERSION)\3|' Sources/GenesisCLI/GenesisCLI.swift
 
 	git add .
