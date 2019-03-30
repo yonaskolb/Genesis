@@ -18,7 +18,7 @@ install: build
 	cp -f .build/release/$(EXECUTABLE_NAME) $(INSTALL_PATH)
 
 build:
-	swift build --disable-sandbox -c release -Xswiftc -static-stdlib
+	swift build --disable-sandbox -c release
 
 uninstall:
 	rm -f $(INSTALL_PATH)
