@@ -6,8 +6,8 @@ public class CLITests: XCTestCase {
 
     func testCLI() {
         let cli = GenesisCLI()
-        XCTAssertEqual(cli.run(arguments: ["genesis"]), 1)
-        XCTAssertEqual(cli.run(arguments: ["genesis", "invalid"]), 1)
-        XCTAssertEqual(cli.run(arguments: ["generate", "-h"]), 0)
+        XCTAssertEqual(cli.run(arguments: [""]), 1)
+        XCTAssertEqual(cli.run(arguments: ["invalid"]), 1)
+        XCTAssertEqual(cli.run(arguments: ["help"]), 0)
     }
 }
