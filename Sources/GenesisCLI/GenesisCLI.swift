@@ -16,9 +16,9 @@ public class GenesisCLI {
 //        cli.router = SingleCommandRouter(command: generateCommand)
     }
 
-    public func run(arguments: String? = nil) -> Int32 {
+    public func run(arguments: [String]? = nil) -> Int32 {
         if let arguments = arguments {
-            return cli.debugGo(with: arguments)
+            return cli.go(with: arguments)
         } else {
             return cli.go()
         }
