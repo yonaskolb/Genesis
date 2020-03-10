@@ -117,10 +117,11 @@ public class TemplateGenerator {
                     return
                 }
             }
-            let fileContents: String
+            let fileContents: String?
             switch file.type {
             case let .template(path): fileContents = try environment.renderTemplate(name: path, context: context)
             case let .contents(string): fileContents = try replaceString(string, context: context)
+            case .directory: fileContents = nil
             }
             let replacedPath = try replaceString(file.path, context: context)
             let generatedFile = GeneratedFile(path: Path(replacedPath), contents: fileContents)
@@ -172,15 +173,19 @@ public struct GenerationResult {
 
         for file in files {
             let filePath = path + file.path
-            try filePath.parent().mkpath()
-            try filePath.write(file.contents)
+            if let contents = file.contents {
+                try filePath.parent().mkpath()
+                try filePath.write(contents)
+            } else {
+                try filePath.mkpath()
+            }
         }
     }
 }
 
 public struct GeneratedFile: Equatable, CustomStringConvertible {
     public let path: Path
-    public let contents: String
+    public let contents: String?
 
     public var description: String {
         return path.string

@@ -9,6 +9,7 @@ public struct File: Equatable, Decodable {
     public enum FileType: Equatable {
         case template(String)
         case contents(String)
+        case directory
     }
 
     enum CodingKeys: CodingKey {
@@ -33,10 +34,12 @@ public struct File: Equatable, Decodable {
         if let contents = try container.decodeIfPresent(String.self, forKey: .contents) {
             type = .contents(contents)
             path = try container.decode(String.self, forKey: .path)
-        } else {
-            let template = try container.decode(String.self, forKey: .template)
+        } else if let template = try container.decodeIfPresent(String.self, forKey: .template) {
             type = .template(template)
-            path = try container.decodeIfPresent(String.self, forKey: .path) ?? template
+            path = try container.decode(String.self, forKey: .path)
+        } else {
+            type = .directory
+            path = try container.decode(String.self, forKey: .path)
         }
     }
 }
