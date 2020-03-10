@@ -32,13 +32,19 @@ public class GeneratorTests: XCTestCase {
             let expectedFiles = expectedFiles.sorted { $0.path < $1.path }
             XCTAssertEqual(generatedFiles.count, expectedFiles.count, file: file, line: line)
             for (generatedFile, expectedFile) in zip(expectedFiles, generatedFiles) {
-                XCTAssertEqual(
-                    generatedFile,
-                    expectedFile,
-                    "\nGENERATED:\n  \(generatedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))\nEXPECTED:\n  \(expectedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))",
-                    file: file,
-                    line: line
-                )
+                if let generatedFileContents = generatedFile.contents,
+                    let expectedFileContents = expectedFile.contents {
+                    XCTAssertEqual(
+                        generatedFile,
+                        expectedFile,
+                        "\nGENERATED:\n  \(generatedFileContents.replacingOccurrences(of: "\n", with: "\n  "))\nEXPECTED:\n  \(expectedFileContents.replacingOccurrences(of: "\n", with: "\n  "))",
+                        file: file,
+                        line: line
+                    )
+                } else {
+                    XCTAssertNil(generatedFile.contents, "What was generated is a directory, not a file.")
+                    XCTAssertNil(expectedFile.contents, "What was expected is a directory, not a file.")
+                }
             }
         }
         if let expectedContext = expectedContext {
