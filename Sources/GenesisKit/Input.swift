@@ -11,16 +11,16 @@ extension Input {
 
         let prompt = "\(prompt)\n\(optionsString)"
 
-        let validation  = Validation<String>.custom("") { input in
+        let validation = Validation<String>.custom("") { input in
             if let index = Int(input), index > 0, index <= options.count {
                 return true
             }
             return options.contains(input)
         }
-        let errorResponse: InputReader<String>.ErrorResponse = { _,_  in
+        let errorResponse: InputReader<String>.ErrorResponse = { _, _ in
             WriteStream.stderr.print("You must respond with one of the following:\n\(optionsString)")
         }
-        
+
         let value = Input.readObject(prompt: prompt, secure: false, validation: [validation], errorResponse: errorResponse)
         if options.contains(value) {
             return value
