@@ -13,7 +13,7 @@ public class TemplateTests: XCTestCase {
         let expectedFiles: [File] = [
             File(type: .template("Project.stencil"), path: "{{ name }}.swift"),
             File(type: .contents("File {{ name }} of type {{ type }}"), path: "{{ name }}.{{ type }}", include: "generate", context: "files"),
-            File(type: .directory, path: "Parent/Child/App"),
+            File(type: .directory, path: "{{ path }}/App/"),
         ]
         let expectedOptions: [Option] = [
             Option(name: "project", description: "The name of the project", value: "Project", type: .string, question: "What is the name of your project?", required: true),
@@ -22,7 +22,7 @@ public class TemplateTests: XCTestCase {
                 Option(name: "type", type: .choice, question: "What sort of file?", choices: ["stencil", "swift"]),
                 Option(name: "generate", value: "true", type: .boolean, question: "Should this be generated?"),
             ]),
-            Option(name: "directory", description: "The name of the path to App directory", value: "Parent/Child", type: .string, question: "What is the name of the path for App directory?", required: true),
+            Option(name: "path", description: "The name of the path to App directory", value: "Parent/Child", type: .string, question: "What is the name of the path for App directory?", required: true),
         ]
         let expectedTemplate = GenesisTemplate(
             path: templateFixture,
