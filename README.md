@@ -49,7 +49,7 @@ Generated files:
 Much more powerful templates are possible. See more complete documentation [here](#templates)
 
 ## Installing
-Make sure Xcode 9 is installed first.
+Make sure Xcode 13 is installed first.
 
 #### [Mint](https://github.com/yonaskolb/mint)
 ```sh

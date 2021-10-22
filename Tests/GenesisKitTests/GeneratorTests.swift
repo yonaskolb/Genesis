@@ -19,7 +19,7 @@ public class GeneratorTests: XCTestCase {
     ) throws {
         if let inputs = inputs {
             var inputIndex = -1
-            ReadInput.read = {
+            Term.read = {
                 inputIndex += 1
                 return inputs[inputIndex]
             }
