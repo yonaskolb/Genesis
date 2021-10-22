@@ -23,6 +23,12 @@ options:
         question: Should this be generated?
         type: boolean
         value: true
+  - name: path
+    description: The name of the path to App directory
+    question: What is the name of the path for App directory?
+    required: true
+    type: string
+    value: Parent/Child
 files:
   - template: Project.stencil
     path: "{{ name }}.swift"
@@ -30,3 +36,4 @@ files:
     path: "{{ name }}.{{ type }}"
     context: files
     include: generate
+  - path: "{{ path }}/App/"
