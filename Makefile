@@ -4,21 +4,20 @@ VERSION = 0.5.0
 
 PREFIX = /usr/local
 INSTALL_PATH = $(PREFIX)/bin/$(EXECUTABLE_NAME)
-SHARE_PATH = $(PREFIX)/share/$(EXECUTABLE_NAME)
-CURRENT_PATH = $(PWD)
 FORMULA = Formula/$(EXECUTABLE_NAME).rb
 REPO = https://github.com/yonaskolb/$(EXECUTABLE_NAME)
 RELEASE_TAR = $(REPO)/archive/$(VERSION).tar.gz
-#SHA = $(shell curl -L -s $(RELEASE_TAR) | shasum -a 256 | sed 's/ .*//')
+SWIFT_BUILD_FLAGS = --disable-sandbox -c release --arch arm64 --arch x86_64
+EXECUTABLE_PATH = $(shell swift build $(SWIFT_BUILD_FLAGS) --show-bin-path)/$(EXECUTABLE_NAME)
 
-.PHONY: install build uninstall format_code update_brew release
+.PHONY: install build uninstall format_code release
 
 install: build
 	mkdir -p $(PREFIX)/bin
-	cp -f .build/release/$(EXECUTABLE_NAME) $(INSTALL_PATH)
+	cp -f $(EXECUTABLE_PATH) $(INSTALL_PATH)
 
 build:
-	swift build --disable-sandbox -c release
+	swift build $(SWIFT_BUILD_FLAGS)
 
 uninstall:
 	rm -f $(INSTALL_PATH)
@@ -31,13 +30,6 @@ format_code:
 commit_format_code: format_code
 	git add .
 	git commit -m "Format code with `swiftformat --version`"
-
-update_brew:
-	sed -i '' 's|\(url ".*/archive/\)\(.*\)\(.tar\)|\1$(VERSION)\3|' $(FORMULA)
-	sed -i '' 's|\(sha256 "\)\(.*\)\("\)|\1$(SHA)\3|' $(FORMULA)
-
-	git add .
-	git commit -m "Update brew to $(VERSION)"
 
 release: format_code
 	sed -i '' 's|\(let version = "\)\(.*\)\("\)|\1$(VERSION)\3|' Sources/GenesisCLI/GenesisCLI.swift
