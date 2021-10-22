@@ -32,19 +32,13 @@ public class GeneratorTests: XCTestCase {
             let expectedFiles = expectedFiles.sorted { $0.path < $1.path }
             XCTAssertEqual(generatedFiles.count, expectedFiles.count, file: file, line: line)
             for (generatedFile, expectedFile) in zip(expectedFiles, generatedFiles) {
-                if let generatedFileContents = generatedFile.contents,
-                    let expectedFileContents = expectedFile.contents {
-                    XCTAssertEqual(
-                        generatedFile,
-                        expectedFile,
-                        "\nGENERATED:\n  \(generatedFileContents.replacingOccurrences(of: "\n", with: "\n  "))\nEXPECTED:\n  \(expectedFileContents.replacingOccurrences(of: "\n", with: "\n  "))",
-                        file: file,
-                        line: line
-                    )
-                } else {
-                    XCTAssertNil(generatedFile.contents, "What was generated is a directory, not a file.")
-                    XCTAssertNil(expectedFile.contents, "What was expected is a directory, not a file.")
-                }
+                XCTAssertEqual(
+                    generatedFile,
+                    expectedFile,
+                    "\nGENERATED:\n  \(String(describing: generatedFile.contents?.replacingOccurrences(of: "\n", with: "\n  ")))\nEXPECTED:\n  \(String(describing: expectedFile.contents?.replacingOccurrences(of: "\n", with: "\n  ")))",
+                    file: file,
+                    line: line
+                )
             }
         }
         if let expectedContext = expectedContext {
@@ -207,5 +201,13 @@ public class GeneratorTests: XCTestCase {
         """
         let context: Context = ["name": "hello", "colors": ["red", "blue"]]
         try expectGeneration(files: [File(type: .contents(stencil), path: "")], context: context, expectedFiles: [GeneratedFile(path: "", contents: expectedOutput)])
+    }
+
+    func testGenerateDirectoryOnly() throws {
+        let options = [Option(name: "path", value: "path/to", type: .string, required: true)]
+        let files = [File(type: .directory, path: "{{ path }}/tests/")]
+        let expectedFiles = [GeneratedFile(path: "path/to/tests/", contents: nil)]
+
+        try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles)
     }
 }
