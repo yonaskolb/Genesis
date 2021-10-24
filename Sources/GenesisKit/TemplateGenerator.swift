@@ -32,7 +32,7 @@ public class TemplateGenerator {
     }
 
     fileprivate func getOptionValue(_ option: Option, context: inout Context) throws {
-        if let value = context[option.name] {
+        if context[option.name] != nil {
             // found existing option
             return
         }

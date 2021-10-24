@@ -10,7 +10,7 @@ class GenerateCommand: Command {
     let name = "generate"
     let shortDescription = "Generates files based on a template"
 
-    let templatePath = Parameter()
+    let templatePath = Param<String>()
 
     let optionPath = Key<String>("-p", "--option-path", description: "Path to a yaml or json file containing options")
 
