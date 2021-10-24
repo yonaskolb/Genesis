@@ -36,7 +36,7 @@ class GenerateCommand: Command {
         context = ProcessInfo.processInfo.environment
 
         // extract options from option path
-        if let optionPath = self.optionPath.value {
+        if let optionPath = optionPath.value {
             let path = Path(optionPath)
             if !path.exists {
                 stream.out <<< "Option path \(optionPath) doesn't exist"

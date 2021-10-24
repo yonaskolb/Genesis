@@ -2,9 +2,9 @@
 import Foundation
 import SwiftCLI
 
-extension Input {
+public extension Input {
 
-    public static func readOption(options: [String], prompt: String) -> String {
+    static func readOption(options: [String], prompt: String) -> String {
         let optionsString = options.enumerated()
             .map { "  \($0.offset + 1). \($0.element)" }
             .joined(separator: "\n")
