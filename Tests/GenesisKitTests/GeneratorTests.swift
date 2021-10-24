@@ -35,7 +35,7 @@ public class GeneratorTests: XCTestCase {
                 XCTAssertEqual(
                     generatedFile,
                     expectedFile,
-                    "\nGENERATED:\n  \(generatedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))\nEXPECTED:\n  \(expectedFile.contents.replacingOccurrences(of: "\n", with: "\n  "))",
+                    "\nGENERATED:\n  \(String(describing: generatedFile.contents?.replacingOccurrences(of: "\n", with: "\n  ")))\nEXPECTED:\n  \(String(describing: expectedFile.contents?.replacingOccurrences(of: "\n", with: "\n  ")))",
                     file: file,
                     line: line
                 )
@@ -201,5 +201,13 @@ public class GeneratorTests: XCTestCase {
         """
         let context: Context = ["name": "hello", "colors": ["red", "blue"]]
         try expectGeneration(files: [File(type: .contents(stencil), path: "")], context: context, expectedFiles: [GeneratedFile(path: "", contents: expectedOutput)])
+    }
+
+    func testGenerateDirectoryOnly() throws {
+        let options = [Option(name: "path", value: "path/to", type: .string, required: true)]
+        let files = [File(type: .directory, path: "{{ path }}/tests/")]
+        let expectedFiles = [GeneratedFile(path: "path/to/tests/", contents: nil)]
+
+        try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles)
     }
 }
