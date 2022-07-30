@@ -10,7 +10,7 @@ let package = Package(
         .library(name: "GenesisKit", targets: ["GenesisKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/SwiftGen/StencilSwiftKit", from: "2.8.0"),
+        .package(url: "https://github.com/SwiftGen/StencilSwiftKit", from: "2.10.0"),
         .package(url: "https://github.com/jpsim/Yams", from: "5.0.0"),
         .package(url: "https://github.com/kylef/PathKit", from: "1.0.1"),
         .package(url: "https://github.com/onevcat/Rainbow", from: "4.0.1"),
