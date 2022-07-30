@@ -1,6 +1,6 @@
 TOOL_NAME = Genesis
 export EXECUTABLE_NAME = genesis
-VERSION = 0.7.0
+VERSION = 0.8.0
 
 PREFIX = /usr/local
 INSTALL_PATH = $(PREFIX)/bin/$(EXECUTABLE_NAME)
