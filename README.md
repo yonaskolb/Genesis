@@ -6,7 +6,7 @@
 
 Genesis is a templating and scaffolding tool.
 
-A Genesis template is a manifest of options and files written in yaml or json. Option values can be provided in [various ways](#providing-options) otherwise you will be interactively asked for inputs. Template files are written in [Stencil](https://github.com/kylef/Stencil). The list of files can make use of dynamic paths and be generated multiple times depending on the format of the input.
+A Genesis template is a manifest of options and files written in yaml or json. Option values can be provided in [various ways](#providing-options) otherwise you will be interactively asked for inputs. Template files are written in [Stencil](https://github.com/stencilproject/Stencil). The list of files can make use of dynamic paths and be generated multiple times depending on the format of the input.
 
 - ✅ Template manifests in easy to read and write **yaml or json**
 - ✅ Template files written in **Stencil** templating language
@@ -167,7 +167,7 @@ Each file can have a `contents` or `template`. If neither of those are present, 
 The final path of the file will be based off `path` otherwise `template`.
 
 ## Stencil Templates
-Each Stencil template has all the filters available in [StencilSwiftKit](https://github.com/SwiftGen/StencilSwiftKit), and has access to all the [options](#options). See [Stencil](https://github.com/kylef/Stencil) for more info about tags.
+Each Stencil template has all the filters available in [StencilSwiftKit](https://github.com/SwiftGen/StencilSwiftKit), and has access to all the [options](#options). See [Stencil](https://github.com/stencilproject/Stencil) for more info about tags.
 
 Small example:
 
