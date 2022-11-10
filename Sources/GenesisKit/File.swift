@@ -9,6 +9,7 @@ public struct File: Equatable, Decodable {
     public enum FileType: Equatable {
         case template(String)
         case contents(String)
+        case copy(String)
         case directory
     }
 
@@ -18,6 +19,7 @@ public struct File: Equatable, Decodable {
         case path
         case include
         case context
+        case copy
     }
 
     public init(type: FileType, path: String, include: String? = nil, context: String? = nil) {
@@ -37,6 +39,13 @@ public struct File: Equatable, Decodable {
         } else if let template = try container.decodeIfPresent(String.self, forKey: .template) {
             type = .template(template)
             path = try container.decode(String.self, forKey: .path)
+        } else if let copy = try container.decodeIfPresent(String.self, forKey: .copy) {
+            type = .copy(copy)
+            if let path = try container.decodeIfPresent(String.self, forKey: .path) {
+                self.path = path
+            } else {
+                self.path = copy
+            }
         } else {
             type = .directory
             path = try container.decode(String.self, forKey: .path)

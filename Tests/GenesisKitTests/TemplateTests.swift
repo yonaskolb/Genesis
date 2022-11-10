@@ -13,6 +13,8 @@ public class TemplateTests: XCTestCase {
             File(type: .contents("File {{ name }} of type {{ type }}"), path: "{{ name }}.{{ type }}", include: "generate", context: "files"),
             File(type: .directory, path: "{{ path }}/Grandchild"),
             File(type: .contents("### Hello"), path: "README.md"),
+            File(type: .copy("folder"), path: "folder"),
+            File(type: .copy("folder2"), path: "new folder"),
         ]
         let expectedOptions: [Option] = [
             Option(name: "project", description: "The name of the project", value: "Project", type: .string, question: "What is the name of your project?", required: true),

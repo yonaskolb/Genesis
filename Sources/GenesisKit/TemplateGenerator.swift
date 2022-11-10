@@ -27,7 +27,7 @@ public class TemplateGenerator {
         self.interactive = interactive
         answers = []
         var context: Context = context
-        let generatedFiles = try generateSection(template.section, context: &context)
+        let generatedFiles = try generateSection(template.section, templateDirectory: template.path.parent(), context: &context)
         return GenerationResult(files: generatedFiles, context: context, answers: answers)
     }
 
@@ -101,7 +101,7 @@ public class TemplateGenerator {
         }
     }
 
-    func generateSection(_ section: TemplateSection, context: inout Context) throws -> [GeneratedFile] {
+    func generateSection(_ section: TemplateSection, templateDirectory: Path, context: inout Context) throws -> [GeneratedFile] {
         for option in section.options {
             try getOptionValue(option, context: &context)
         }
@@ -117,14 +117,21 @@ public class TemplateGenerator {
                     return
                 }
             }
-            let fileContents: String?
-            switch file.type {
-            case let .template(path): fileContents = try environment.renderTemplate(name: path, context: context)
-            case let .contents(string): fileContents = try replaceString(string, context: context)
-            case .directory: fileContents = nil
-            }
             let replacedPath = try replaceString(file.path, context: context)
-            let generatedFile = GeneratedFile(path: Path(replacedPath), contents: fileContents)
+            let contents: GeneratedFile.Contents
+            switch file.type {
+                case let .template(path):
+                    let string = try environment.renderTemplate(name: path, context: context)
+                    contents = GeneratedFile.Contents.file(string)
+                case let .contents(string):
+                    let string = try replaceString(string, context: context)
+                    contents = .file(string)
+                case .directory:
+                    contents = .directory
+                case .copy(let path):
+                    contents = .copy(templateDirectory + path)
+            }
+            let generatedFile = GeneratedFile(path: Path(replacedPath), contents: contents)
             generatedFiles.append(generatedFile)
         }
 
@@ -173,11 +180,18 @@ public struct GenerationResult {
 
         for file in files {
             let filePath = path + file.path
-            if let contents = file.contents {
-                try filePath.parent().mkpath()
-                try filePath.write(contents)
-            } else {
-                try filePath.mkpath()
+            switch file.contents {
+                case .file(let contents):
+                    try filePath.parent().mkpath()
+                    try filePath.write(contents)
+                case .copy(let copyPath):
+                    if filePath.exists {
+                        try filePath.delete()
+                    }
+                    try filePath.parent().mkpath()
+                    try copyPath.copy(filePath)
+                case .directory:
+                    try filePath.mkpath()
             }
         }
     }
@@ -185,7 +199,13 @@ public struct GenerationResult {
 
 public struct GeneratedFile: Equatable, CustomStringConvertible {
     public let path: Path
-    public let contents: String?
+    public let contents: Contents
+
+    public enum Contents: Equatable {
+        case file(String)
+        case directory
+        case copy(Path)
+    }
 
     public var description: String {
         return path.string

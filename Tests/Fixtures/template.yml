@@ -39,3 +39,6 @@ files:
   - path: "{{ path }}/Grandchild"
   - path: "README.md"
     contents: "### Hello"
+  - copy: folder
+  - copy: folder2
+    path: new folder

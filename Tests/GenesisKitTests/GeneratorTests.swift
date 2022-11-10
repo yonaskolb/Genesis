@@ -35,7 +35,6 @@ public class GeneratorTests: XCTestCase {
                 XCTAssertEqual(
                     generatedFile,
                     expectedFile,
-                    "\nGENERATED:\n  \(String(describing: generatedFile.contents?.replacingOccurrences(of: "\n", with: "\n  ")))\nEXPECTED:\n  \(String(describing: expectedFile.contents?.replacingOccurrences(of: "\n", with: "\n  ")))",
                     file: file,
                     line: line
                 )
@@ -52,14 +51,14 @@ public class GeneratorTests: XCTestCase {
     func testOptionPassing() throws {
         let options = [Option(name: "name")]
         let files = [File(type: .contents("name: {{ name }}"), path: "{{ name }}.swift")]
-        let expectedFiles = [GeneratedFile(path: "test.swift", contents: "name: test")]
+        let expectedFiles = [GeneratedFile(path: "test.swift", contents: .file("name: test"))]
         try expectGeneration(options: options, files: files, context: ["name": "test"], expectedFiles: expectedFiles)
     }
 
     func testDefaultValues() throws {
         let options = [Option(name: "name", value: "test")]
         let files = [File(type: .contents("name: {{ name }}"), path: "{{ name }}.swift")]
-        let expectedFiles = [GeneratedFile(path: "test.swift", contents: "name: test")]
+        let expectedFiles = [GeneratedFile(path: "test.swift", contents: .file("name: test"))]
         try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles)
     }
 
@@ -76,8 +75,8 @@ public class GeneratorTests: XCTestCase {
             File(type: .contents("d"), path: "d", include: "includeFileD"),
         ]
         let expectedFiles = [
-            GeneratedFile(path: "a", contents: "a"),
-            GeneratedFile(path: "c", contents: "c"),
+            GeneratedFile(path: "a", contents: .file("a")),
+            GeneratedFile(path: "c", contents: .file("c")),
         ]
         let context: Context = ["type": "a", "includeFileC": true, "includeFileD": false]
         try expectGeneration(options: options, files: files, context: context, expectedFiles: expectedFiles)
@@ -86,7 +85,7 @@ public class GeneratorTests: XCTestCase {
     func testAskForOption() throws {
         let options = [Option(name: "name", required: true)]
         let files = [File(type: .contents("name: {{ name }}"), path: "{{ name }}.swift")]
-        let expectedFiles = [GeneratedFile(path: "test.swift", contents: "name: test")]
+        let expectedFiles = [GeneratedFile(path: "test.swift", contents: .file("name: test"))]
 
         try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles, inputs: ["test"])
     }
@@ -94,7 +93,7 @@ public class GeneratorTests: XCTestCase {
     func testAskForChoiceOption() throws {
         let options = [Option(name: "name", type: .choice, required: true, choices: ["one", "two"])]
         let files = [File(type: .contents("name: {{ name }}"), path: "{{ name }}.swift")]
-        let expectedFiles = [GeneratedFile(path: "one.swift", contents: "name: one")]
+        let expectedFiles = [GeneratedFile(path: "one.swift", contents: .file("name: one"))]
 
         try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles, inputs: ["one"])
         try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles, inputs: ["1"])
@@ -119,7 +118,7 @@ public class GeneratorTests: XCTestCase {
     func testUsePassedOptionOverDefaultValues() throws {
         let options = [Option(name: "name", value: "default")]
         let files = [File(type: .contents("name: {{ name }}"), path: "{{ name }}.swift")]
-        let expectedFiles = [GeneratedFile(path: "test.swift", contents: "name: test")]
+        let expectedFiles = [GeneratedFile(path: "test.swift", contents: .file("name: test"))]
         try expectGeneration(options: options, files: files, context: ["name": "test"], expectedFiles: expectedFiles)
     }
 
@@ -130,9 +129,9 @@ public class GeneratorTests: XCTestCase {
             File(type: .contents("header"), path: "{{ name }}.h", include: "name == 'framework'", context: "targets"),
         ]
         let expectedFiles = [
-            GeneratedFile(path: "app.swift", contents: "name: app"),
-            GeneratedFile(path: "framework.swift", contents: "name: framework"),
-            GeneratedFile(path: "framework.h", contents: "header"),
+            GeneratedFile(path: "app.swift", contents: .file("name: app")),
+            GeneratedFile(path: "framework.swift", contents: .file("name: framework")),
+            GeneratedFile(path: "framework.h", contents: .file("header")),
         ]
         let context: Context = ["targets": [["name": "app"], ["name": "framework"]]]
         try expectGeneration(options: options, files: files, context: context, expectedFiles: expectedFiles)
@@ -150,8 +149,8 @@ public class GeneratorTests: XCTestCase {
         let options = [Option(name: "targets", type: .array, required: true, options: [nameOption])]
         let files = [File(type: .contents("name: {{ name }}"), path: "{{ name }}.swift", context: "targets")]
         let expectedFiles = [
-            GeneratedFile(path: "app.swift", contents: "name: app"),
-            GeneratedFile(path: "framework.swift", contents: "name: framework"),
+            GeneratedFile(path: "app.swift", contents: .file("name: app")),
+            GeneratedFile(path: "framework.swift", contents: .file("name: framework")),
         ]
         try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles, inputs: inputs)
     }
@@ -200,13 +199,13 @@ public class GeneratorTests: XCTestCase {
 
         """
         let context: Context = ["name": "hello", "colors": ["red", "blue"]]
-        try expectGeneration(files: [File(type: .contents(stencil), path: "")], context: context, expectedFiles: [GeneratedFile(path: "", contents: expectedOutput)])
+        try expectGeneration(files: [File(type: .contents(stencil), path: "")], context: context, expectedFiles: [GeneratedFile(path: "", contents: .file(expectedOutput))])
     }
 
     func testGenerateDirectoryOnly() throws {
         let options = [Option(name: "path", value: "path/to", type: .string, required: true)]
         let files = [File(type: .directory, path: "{{ path }}/tests/")]
-        let expectedFiles = [GeneratedFile(path: "path/to/tests/", contents: nil)]
+        let expectedFiles = [GeneratedFile(path: "path/to/tests/", contents: .directory)]
 
         try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles)
     }

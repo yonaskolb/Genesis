@@ -157,14 +157,12 @@ Options are structured input for the `Stencil` templates. They serve as document
  
 #### Files
 
-- **path**: This is the path the file will be generated at. It can include `Stencil` tags to make it dynamic. This defaults to `template` if present
+- **path**: This is the path the file will be generated at. It can include `Stencil` tags to make it dynamic.
 - **contents**: A file template string
 - **template**: A path to a file template
+- **copy**: A path to copy. This can be a file or a directory
 - **context**: An optional context property path that will be passed to the template. If this resolves to an array, a file for each element will be created, using tags in `path` to differentiate them.
 - **include**: Whether the file should be written. This is a Stencil if tag without the braces. For example instead of `{% if type == 'framework' %}` you would write `type == 'framework'`
-
-Each file can have a `contents` or `template`. If neither of those are present, the file will be copied exactly as is without any content replacement.
-The final path of the file will be based off `path` otherwise `template`.
 
 ## Stencil Templates
 Each Stencil template has all the filters available in [StencilSwiftKit](https://github.com/SwiftGen/StencilSwiftKit), and has access to all the [options](#options). See [Stencil](https://github.com/stencilproject/Stencil) for more info about tags.
