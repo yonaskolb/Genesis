@@ -4,16 +4,15 @@ import XCTest
 
 public class TemplateTests: XCTestCase {
 
-    let fixturePath = Path(#file).parent().parent() + "Fixtures"
-
     func testTemplateParsing() throws {
         let templateFixture = fixturePath + "template.yml"
         let parsedTemplate = try GenesisTemplate(path: templateFixture)
 
         let expectedFiles: [File] = [
-            File(type: .template("Project.stencil"), path: "{{ name }}.swift"),
+            File(type: .template("Project.stencil"), path: "{{ project }}.swift"),
             File(type: .contents("File {{ name }} of type {{ type }}"), path: "{{ name }}.{{ type }}", include: "generate", context: "files"),
-            File(type: .directory, path: "{{ path }}/App/"),
+            File(type: .directory, path: "{{ path }}/Grandchild"),
+            File(type: .contents("### Hello"), path: "README.md"),
         ]
         let expectedOptions: [Option] = [
             Option(name: "project", description: "The name of the project", value: "Project", type: .string, question: "What is the name of your project?", required: true),

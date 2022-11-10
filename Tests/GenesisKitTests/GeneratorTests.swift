@@ -210,4 +210,5 @@ public class GeneratorTests: XCTestCase {
 
         try expectGeneration(options: options, files: files, context: [:], expectedFiles: expectedFiles)
     }
+
 }

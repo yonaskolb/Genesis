@@ -31,9 +31,11 @@ options:
     value: Parent/Child
 files:
   - template: Project.stencil
-    path: "{{ name }}.swift"
+    path: "{{ project }}.swift"
   - contents: "File {{ name }} of type {{ type }}"
     path: "{{ name }}.{{ type }}"
     context: files
     include: generate
-  - path: "{{ path }}/App/"
+  - path: "{{ path }}/Grandchild"
+  - path: "README.md"
+    contents: "### Hello"
