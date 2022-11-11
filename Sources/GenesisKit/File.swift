@@ -38,7 +38,11 @@ public struct File: Equatable, Decodable {
             path = try container.decode(String.self, forKey: .path)
         } else if let template = try container.decodeIfPresent(String.self, forKey: .template) {
             type = .template(template)
-            path = try container.decode(String.self, forKey: .path)
+            if let path = try container.decodeIfPresent(String.self, forKey: .path) {
+                self.path = path
+            } else {
+                self.path = template
+            }
         } else if let copy = try container.decodeIfPresent(String.self, forKey: .copy) {
             type = .copy(copy)
             if let path = try container.decodeIfPresent(String.self, forKey: .path) {
