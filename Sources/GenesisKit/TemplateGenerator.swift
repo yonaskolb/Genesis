@@ -32,6 +32,18 @@ public class TemplateGenerator {
     }
 
     fileprivate func getOptionValue(_ option: Option, context: inout Context) throws {
+        defer {
+            switch option.type {
+            case .array:
+                // split string into array
+                if let value = context[option.name] as? String, option.options == nil {
+                    context[option.name] = value.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+                }
+            default:
+                break
+            }
+        }
+
         if context[option.name] != nil {
             // found existing option
             return
@@ -58,19 +70,23 @@ public class TemplateGenerator {
         case .string: context[option.name] = Input.readLine(prompt: question)
         case .boolean: context[option.name] = Input.readBool(prompt: question)
         case .array:
-            var array: [Context] = []
-            func addItem() throws {
-                if Input.readBool(prompt: question) {
-                    var childContext = Context()
-                    for childOption in option.options {
-                        try getOptionValue(childOption, context: &childContext)
+            if let options = option.options {
+                var array: [Context] = []
+                func addItem() throws {
+                    if Input.readBool(prompt: question) {
+                        var childContext = Context()
+                        for childOption in options {
+                            try getOptionValue(childOption, context: &childContext)
+                        }
+                        array.append(childContext)
+                        context[option.name] = array
+                        try addItem()
                     }
-                    array.append(childContext)
-                    context[option.name] = array
-                    try addItem()
                 }
+                try addItem()
+            } else {
+                context[option.name] = Input.readLine(prompt: question)
             }
-            try addItem()
         }
 
         answers.append(Answer(question: question, answer: context[option.name] as Any))

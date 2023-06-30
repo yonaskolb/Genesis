@@ -11,7 +11,7 @@ public struct Option: Equatable, Decodable {
     public var set: String
     public var choices: [String]
     public var childType: OptionType?
-    public var options: [Option]
+    public var options: [Option]?
 
     public enum OptionType: String, Decodable {
         case string
@@ -20,7 +20,7 @@ public struct Option: Equatable, Decodable {
         case array
     }
 
-    public init(name: String, description: String? = nil, value: String? = nil, type: OptionType = .string, set: String? = nil, question: String? = nil, required: Bool = false, choices: [String] = [], branch: [String: TemplateSection] = [:], options: [Option] = []) {
+    public init(name: String, description: String? = nil, value: String? = nil, type: OptionType = .string, set: String? = nil, question: String? = nil, required: Bool = false, choices: [String] = [], branch: [String: TemplateSection] = [:], options: [Option]? = nil) {
         self.name = name
         self.value = value
         self.description = description
@@ -61,6 +61,6 @@ public struct Option: Equatable, Decodable {
         required = try container.decodeIfPresent(Bool.self, forKey: .required) ?? false
         question = try container.decodeIfPresent(String.self, forKey: .question)
         branch = try container.decodeIfPresent([String: TemplateSection].self, forKey: .branch) ?? [:]
-        options = try container.decodeIfPresent([Option].self, forKey: .options) ?? []
+        options = try container.decodeIfPresent([Option].self, forKey: .options)
     }
 }

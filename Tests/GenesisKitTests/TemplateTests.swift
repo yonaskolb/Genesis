@@ -24,6 +24,7 @@ public class TemplateTests: XCTestCase {
                 Option(name: "generate", value: "true", type: .boolean, question: "Should this be generated?"),
             ]),
             Option(name: "path", description: "The name of the path to App directory", value: "Parent/Child", type: .string, question: "What is the name of the path for App directory?", required: true),
+            Option(name: "names", type: .array),
         ]
         let expectedTemplate = GenesisTemplate(
             path: templateFixture,

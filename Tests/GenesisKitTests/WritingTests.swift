@@ -19,6 +19,7 @@ public class WritingTests: XCTestCase {
                     ]
                 ],
             "path": "App/Child",
+            "names": "Sarah, Stephen"
         ]
         let result = try generator.generate(context: context, interactive: false)
         try result.writeFiles(path: fixturePath + "generated")

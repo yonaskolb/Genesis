@@ -153,7 +153,8 @@ Options are structured input for the `Stencil` templates. They serve as document
 	- `string` a simple string
 	- `boolean` a boolean
 	- `choice` a string from a list of choices. Requires `choices` to be defined
-	- `array` an array of other options. Requires `options` to be defined.
+	- `array` an array of other options. If child `options` are defined, if will be an array of options, otherwise it will split a string by command, removing any whitespace between
+- **options**: An array of child options. Used if the `array` type contains objects
  
 #### Files
 

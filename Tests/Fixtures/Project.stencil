@@ -1,3 +1,6 @@
 
 Name: {{project}}
 Some content
+{% for name in names %}
+ - {{ name }}
+{% endfor %}
