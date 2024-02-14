@@ -45,7 +45,7 @@ Generated files:
   MyProject.project
 ```
 
-Much more powerful templates are possible. See more complete documentation [here](#templates)
+Much more powerful templates are possible. See more complete documentation [here](#template)
 
 ## Installing
 Make sure Xcode 13 is installed first.
