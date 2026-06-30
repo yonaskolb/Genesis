@@ -16,7 +16,7 @@ class GenerateCommand: Command {
 
     let destinationPath = Key<String>("-d", "--destination", description: "Path to the directory where output will be generated. Defaults to the current directory")
 
-    let optionsArgument = Key<String>("-o", "--options", description: "Provide option overrides, in the format --options \"option1: value 2, option2: value 2.")
+    let optionsArgument = Key<String>("-o", "--options", description: "Provide option overrides, in the format --options \"option1: value 1, option2: [value 2, value 3]\". Escape literal commas as \\,.")
 
     let nonInteractive = Flag("-n", "--non-interactive", description: "Do not prompt for required options")
 
@@ -55,22 +55,7 @@ class GenerateCommand: Command {
 
         // extract options from options argument
         if let commandLineOptions = optionsArgument.value {
-            let optionList: [String] = commandLineOptions
-                .split(separator: ",")
-                .map(String.init)
-                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-
-            let optionPairs: [(String, String)] = optionList
-                .map { option in
-                    option
-                        .split(separator: ":")
-                        .map(String.init)
-                        .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-                }
-                .filter { $0.count == 2 }
-                .map { ($0[0], $0[1]) }
-
-            for (key, value) in optionPairs {
+            for (key, value) in try CommandLineOptionsParser.parse(commandLineOptions) {
                 context[key] = value
             }
         }

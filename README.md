@@ -95,7 +95,7 @@ Options:
   -d, --destination <value>    Path to the directory where output will be generated. Defaults to the current directory
   -h, --help                   Show help information for this command
   -n, --non-interactive        Do not prompt for required options
-  -o, --options <value>        Provide option overrides, in the format --options "option1: value 2, option2: value 2.
+  -o, --options <value>        Provide option overrides, in the format --options "option1: value 1, option2: [value 2, value 3]". Escape literal commas as \,.
   -p, --option-path <value>    Path to a yaml or json file containing options
 ```
 
@@ -126,7 +126,19 @@ targets:
 Pass specific options with `--options` like this
 
 ```
--- options "option1: value 2, option2: value 2"
+--options "option1: value 1, option2: value 2"
+```
+
+Inline array values can be passed with brackets:
+
+```
+--options "actions: [tap, refresh, dismiss]"
+```
+
+Only the first `:` separates a key from its value, so values like URLs can be passed directly. Escape commas that are part of a scalar value with `\`.
+
+```
+--options "url: https://example.com/path:segment, title: Hello\, world"
 ```
 
 #### 4. Interactive input
