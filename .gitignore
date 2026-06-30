@@ -4,3 +4,4 @@
 /*.xcodeproj
 .swiftpm/*
 .vscode/
+.context/
