@@ -4,11 +4,11 @@ on:
   pull_request: {}
 jobs:
   run:
-    runs-on: macos-11
+    runs-on: macos-15
     name: Xcode ${{ matrix.xcode }}
     strategy:
       matrix:
-        xcode: ["13.0"]
+        xcode: ["26.1.1"]
     steps:
     - uses: actions/checkout@master
     - name: Set Xcode
@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: swift build
     - name: Test
-      run: swift test 2>&1 | xcpretty
+      run: swift test 2>&1 | xcbeautify
